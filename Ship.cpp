@@ -24,18 +24,20 @@ bool Ship::move(board& _board, const unsigned int& _x, const unsigned int& _y, o
 	{
 		if(orin == horizontal)
 		{
-			for (int i = _x; i < length; i++)
+			for (int i = _x; i < length + _x; i++)
 			{
 				placement.push_back(_board.get(_y, i));
 			}
 		}else
+		if(orin == vertical)
 		{
-			for (int i = _y; i < length; i++)
+			for (int i = _y; i < length + _y; i++)
 			{
-				placement.push_back(_board.get( i, _x));
+				tile* t = _board.get( i, _x);
+				placement.push_back(t);
 			}
-		}
 
+		}
 		for(auto t : placement)
 		{
 			if (t->is_occupied())

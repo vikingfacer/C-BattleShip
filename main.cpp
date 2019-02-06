@@ -29,7 +29,7 @@ int main(int argc, char const *argv[])
 
     cout << "did move work? " << (BattleShip.move(gameBoard, 0,0) ? "yes\n" : "no\n");
     cout << "did move work? " << (BattleShip2.move(gameBoard, 0,0) ? "yes\n" : "no\n");
-    cout << "did move work? " << (BattleShip3.move(gameBoard, 50,1, vertical) ? "yes\n" : "no\n");
+    cout << "did move work? " << (BattleShip3.move(gameBoard, 20,25, vertical) ? "yes\n" : "no\n");
 
     gameBoard.draw();
 

@@ -17,7 +17,7 @@ public:
 	board() = delete;
 	explicit board(const int& _rows, const int& _columns);
 	void draw();
-	inline tile* get(const int& _x, const int& _y) { return plan[_x][_y];};
+	inline tile* get(const unsigned int& _x, const unsigned int& _y) { return plan[_x][_y];};
 	inline const int& get_row(){return rows;};
 	inline const int& get_column(){return columns;};
 	~board();

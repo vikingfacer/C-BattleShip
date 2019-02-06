@@ -10,7 +10,7 @@ rows(_rows), columns(_columns)
 		vector<tile*> temp;
 		for (int j = 0; j < columns; j++)
 		{
-			tile* temptile = new tile(i, j, '0');
+			tile* temptile = new tile( j, i, '0');
 			if (temptile)
 			{
 				temp.push_back(temptile);

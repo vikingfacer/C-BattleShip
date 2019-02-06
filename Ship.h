@@ -22,8 +22,8 @@ public:
 private:
 	std::vector<tile*> spaces;
 	char display;
-	int length;
-	int damage;
+	unsigned int length;
+	unsigned int damage;
 };
 
 #endif
