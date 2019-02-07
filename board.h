@@ -15,7 +15,7 @@ class board
 {
 public:
 	board() = delete;
-	explicit board(const int& _rows, const int& _columns);
+	explicit board( const int& _rows, const int& _columns, char fill);
 	void draw();
 	inline tile* get(const unsigned int& _x, const unsigned int& _y) { return plan[_x][_y];};
 	inline const int& get_row(){return rows;};

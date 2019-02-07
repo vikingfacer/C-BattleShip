@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "tile.h"
+// #include "tile.h"
 #include "board.h"
 
 enum orintation {
@@ -11,7 +11,7 @@ enum orintation {
 	vertical
 };
 
-class Ship
+class Ship 
 {
 public:
 	Ship() =delete;
@@ -20,7 +20,6 @@ public:
 
 	~Ship();
 private:
-	std::vector<tile*> spaces;
 	char display;
 	unsigned int length;
 	unsigned int damage;

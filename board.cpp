@@ -1,7 +1,7 @@
 #include "board.h"
-#include "tile.h"
 
-board::board(const int& _rows, const int& _columns) :
+
+board::board(const int& _rows, const int& _columns, char fill) :
 rows(_rows), columns(_columns)
 {
 	plan = vector<vector<tile*>>();
@@ -10,7 +10,7 @@ rows(_rows), columns(_columns)
 		vector<tile*> temp;
 		for (int j = 0; j < columns; j++)
 		{
-			tile* temptile = new tile( j, i, '0');
+			tile* temptile = new tile( j, i, fill);
 			if (temptile)
 			{
 				temp.push_back(temptile);

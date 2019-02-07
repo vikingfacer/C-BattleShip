@@ -21,15 +21,10 @@ using std::vector;
 
 int main(int argc, char const *argv[])
 {
+    board gameBoard( 50, 50, 178);
+    Ship  BattleShip( '#', 10);
 
-    board gameBoard(50, 50);
-    Ship  BattleShip('#', 10);
-    Ship  BattleShip2('#', 10);
-    Ship  BattleShip3('#', 10);
-
-    cout << "did move work? " << (BattleShip.move(gameBoard, 0,0) ? "yes\n" : "no\n");
-    cout << "did move work? " << (BattleShip2.move(gameBoard, 0,0) ? "yes\n" : "no\n");
-    cout << "did move work? " << (BattleShip3.move(gameBoard, 20,25, vertical) ? "yes\n" : "no\n");
+    // cout << "did move work? " << (BattleShip.move(gameBoard, 0,0) ? "yes\n" : "no\n");
 
     gameBoard.draw();
 
