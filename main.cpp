@@ -25,7 +25,8 @@ int main(int argc, char const *argv[])
     Ship  BattleShip( '#', 10);
 
     cout << "did move work? " << (gameBoard.place_ship(&BattleShip, 0,0) ? "yes\n" : "no\n");
-
+    gameBoard.place_shot(0,0);
+    cout << "damage: " << BattleShip.get_damage() << endl;
     gameBoard.draw();
 
 

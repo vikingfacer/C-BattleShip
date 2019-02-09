@@ -17,7 +17,7 @@ public:
 	Ship() =delete;
 	explicit Ship( const char& display, const int& length);
 	inline const unsigned int& get_length(){ return length;};
-	inline const unsigned int& get_damage(){ return damage;};
+	inline const unsigned int get_damage(){ return damage;};
 	inline char get_display(){ return display;};
 	inline void set_damage(const unsigned int& _damage){ damage = _damage;};
 

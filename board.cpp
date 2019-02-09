@@ -93,3 +93,31 @@ bool board::place_ship(Ship* boat, const unsigned int& _x, const unsigned int& _
 
 	return did_it_work;
 }
+
+bool board::place_shot(const unsigned int& _x, const unsigned int& _y)
+{
+	tile* current_tile = plan[_x][_y];
+
+	// check if a ship is there 
+	// if a ship exists there then damage the ship 
+	// then show on the tile that the ship is hit
+	// 
+	if (current_tile->is_occupied() && !current_tile->get_is_shot())
+	{
+		current_tile->get_ship()->set_damage(current_tile->get_ship()->get_damage() + 1);
+		current_tile->set_is_shot(true);
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool board::place_hit_marker(const unsigned int& _x, const unsigned int& _y)
+{
+	return false;
+}
+bool board::place_mis_marker(const unsigned int& _x, const unsigned int& _y)
+{
+	return false;
+}
