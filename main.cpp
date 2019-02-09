@@ -29,18 +29,18 @@ int main(int argc, char const *argv[])
 
     cout << "Player 1: " << endl;
     cout << "did move work? " << (p1gameBoard.place_ship(&p1BattleShip, 0,0) ? "yes\n" : "no\n");
-    p1gameBoard.place_shot(0,0);
-    p1gameBoard.place_hit_marker(0,1);
-    p1gameBoard.place_mis_marker(0,3);
+    p1gameBoard.place_shot(&p2gameBoard,0,0);
+    
     cout << "damage: " << p1BattleShip.get_damage() << endl;
+
     p1gameBoard.draw();
 
-    cout << "damage: " << p1BattleShip.get_damage() << endl;
+    cout << "damage: " << p2BattleShip.get_damage() << endl;
     cout << "did move work? " << (p2gameBoard.place_ship(&p2BattleShip, 10,10) ? "yes\n" : "no\n");
-    p2gameBoard.place_shot(0,0);
-    p2gameBoard.place_hit_marker(0,1);
-    p2gameBoard.place_mis_marker(0,3);
-    cout << "damage: " << p1BattleShip.get_damage() << endl;
+    p2gameBoard.place_shot(&p1gameBoard,0,0);
+    p2gameBoard.place_shot(&p1gameBoard,1,1);
+
+    cout << "damage: " << p2BattleShip.get_damage() << endl;
 
     p2gameBoard.draw();
 

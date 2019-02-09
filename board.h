@@ -20,7 +20,8 @@ public:
 	void draw();
 
 	bool place_ship(Ship* boat, const unsigned int& _x, const unsigned int& _y, orintation orin = horizontal);
-	bool place_shot(const unsigned int& _x, const unsigned int& _y);
+	bool place_shot(board* other_board, const unsigned int& _x, const unsigned int& _y);
+
 	bool place_hit_marker(const unsigned int& _x, const unsigned int& _y);
 	bool place_mis_marker(const unsigned int& _x, const unsigned int& _y);
 	
