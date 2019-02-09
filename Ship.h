@@ -20,7 +20,7 @@ public:
 	inline const unsigned int get_damage(){ return damage;};
 	inline char get_display(){ return display;};
 	inline void set_damage(const unsigned int& _damage){ damage = _damage;};
-
+	inline unsigned int get_health(){ return length - damage; };
 	~Ship();
 private:
 	char display;

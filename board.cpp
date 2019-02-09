@@ -113,11 +113,31 @@ bool board::place_shot(const unsigned int& _x, const unsigned int& _y)
 	}
 }
 
+
+// these two functions are helper functiosn to the place shot function they affect the other board
+
 bool board::place_hit_marker(const unsigned int& _x, const unsigned int& _y)
 {
+	tile* current_tile = plan[_x][_y];
+
+	if(!current_tile->get_is_shot())
+	{
+		current_tile->set_is_hit_mark(true);
+		// current_tile->set_is_shot(true);
+		return true;
+	}
+
 	return false;
 }
 bool board::place_mis_marker(const unsigned int& _x, const unsigned int& _y)
 {
+	tile* current_tile = plan[_x][_y];
+
+	if(!current_tile->get_is_shot())
+	{
+		current_tile->set_is_mis_mark(true);
+		// current_tile->set_is_shot(true);
+		return true;
+	}
 	return false;
 }

@@ -1,7 +1,7 @@
 COMPILER="g++"
 FLAGS="-std=c++11"
 libs="-lboost_regex"
-BINS=test
+BIN=test
 
 
 
@@ -11,16 +11,17 @@ all: $(BINS)
 	$(COMPILER) $(FLAGS) -c $^ -o $@
 
 
+run: $(BIN)
+	./$(BIN)
 
-
-test: Ship.o board.o main.o
+$(BIN): Ship.o board.o main.o tile.o
 	$(COMPILER) $(FLAGS) $^ -o $@ $(libs)
 
-memtest: test
-	valgrind --tool=memcheck  ./$<
+memtest: run
+	valgrind --tool=memcheck  ./$(BIN)
 
 
 .PHONY: clean
 
 clean: 
-	rm *.o
+	rm *.o; rm $(BIN)
