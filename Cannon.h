@@ -1,13 +1,3 @@
 
-
-
-class Cannon
-{
-public:
-	Cannon();
-	
-	~Cannon();
-private:
-	char display;
-	
-};
+#include <vector>
+#include "Ship.h"

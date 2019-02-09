@@ -4,7 +4,7 @@
 #include <vector>
 
 // #include "tile.h"
-#include "board.h"
+// #include "board.h"
 
 enum orintation {
 	horizontal,
@@ -16,7 +16,10 @@ class Ship
 public:
 	Ship() =delete;
 	explicit Ship( const char& display, const int& length);
-	bool move( board& _board, const unsigned int& _x, const unsigned int& _y, orintation orin = horizontal);
+	inline const unsigned int& get_length(){ return length;};
+	inline const unsigned int& get_damage(){ return damage;};
+	inline char get_display(){ return display;};
+	inline void set_damage(const unsigned int& _damage){ damage = _damage;};
 
 	~Ship();
 private:

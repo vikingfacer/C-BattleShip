@@ -21,10 +21,10 @@ using std::vector;
 
 int main(int argc, char const *argv[])
 {
-    board gameBoard( 50, 50, 178);
+    board gameBoard( 50, 50, '~');
     Ship  BattleShip( '#', 10);
 
-    // cout << "did move work? " << (BattleShip.move(gameBoard, 0,0) ? "yes\n" : "no\n");
+    cout << "did move work? " << (gameBoard.place_ship(&BattleShip, 0,0) ? "yes\n" : "no\n");
 
     gameBoard.draw();
 
