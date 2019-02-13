@@ -4,47 +4,82 @@
 
 #include <vector>
 
+#include "raylib.h"
 
-#include <boost/regex.hpp>
-#include <boost/algorithm/string/erase.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 
 #include "board.h"
 #include "Ship.h"
-
+#include "player.h"
 
 using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
 
+class playerInput
+{
+public:
+playerInput(float _x, float _y) : x(_x/2), y(_y/2), start_x(_x), start_y(_y) {};
+
+void draw(int size)
+{
+	float _x = x, _y = y;
+	DrawRectangle(_x * 10, _y * 10, 90, 90, BLACK);
+
+};
+
+int* getInput()
+{
+
+	if (IsKeyDown(KEY_RIGHT) && (x < start_x)) x += 1;
+	else
+	if (IsKeyDown(KEY_LEFT) && (x > 0))	x -= 1;
+
+	if (IsKeyDown(KEY_DOWN) &&(y < start_y))	y += 1;
+	else
+	if (IsKeyDown(KEY_UP) && (y > 0))	y -= 1;
+
+	int arr[2] = {x, y};
+
+	cout << "x :" << x << " y: " << y << endl;
+	return arr;
+}
+private:
+	float x,y, start_x, start_y;
+	
+};
+
+
+
 int main(int argc, char const *argv[])
 {
-    board p1gameBoard( 50, 50, '~');
-    Ship  p1BattleShip( '#', 10);
+	InitWindow(500, 500, "BATTLE SHIP");
 
-    board p2gameBoard( 50, 50, '~');
-    Ship  p2BattleShip( '#', 10);
+	player p1;
 
-    cout << "Player 1: " << endl;
-    cout << "did move work? " << (p1gameBoard.place_ship(&p1BattleShip, 0,0) ? "yes\n" : "no\n");
-    p1gameBoard.place_shot(&p2gameBoard,0,0);
-    
-    cout << "damage: " << p1BattleShip.get_damage() << endl;
+	playerInput  playerIn(500,500);
 
-    p1gameBoard.draw();
+    while (!WindowShouldClose())    // Detect window close button or ESC key
+    {
 
-    cout << "damage: " << p2BattleShip.get_damage() << endl;
-    cout << "did move work? " << (p2gameBoard.place_ship(&p2BattleShip, 10,10) ? "yes\n" : "no\n");
-    p2gameBoard.place_shot(&p1gameBoard,0,0);
-    p2gameBoard.place_shot(&p1gameBoard,1,1);
+    	playerIn.getInput();
 
-    cout << "damage: " << p2BattleShip.get_damage() << endl;
 
-    p2gameBoard.draw();
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        p1._board->draw();
+
+        playerIn.draw(10);
 
 
 
+		EndDrawing();
+    }
+	p1._board->draw();
     return 0;
 }
+
+
+
+
+

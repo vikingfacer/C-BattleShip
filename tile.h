@@ -3,15 +3,18 @@
 
 #include <iostream>
 #include "Ship.h"
+#include <raylib.h>
 class tile
 {
 public:
 	tile() =delete;
 	explicit tile(const unsigned int& _x,unsigned const int& _y, const char& _display);
-	tile(const unsigned int& _x, const unsigned int& _y, const char& _display, const char& _hit_mark, const char& _mis_mark, const char& _damage_mark);
+	tile(const unsigned int& _x, const unsigned int& _y, const char& _display, const char& _hit_mark, const char& _mis_mark, const char& _damage_mark, const float& _size);
 	
 	friend std::ostream& operator<<(std::ostream& os, const tile& t);
-	
+	void draw();
+
+
 	inline void set_x(const unsigned int& _x) {x = _x;};
 	inline void set_y(const unsigned int& _y) {y = _y;};
 	inline void set_display(const char& _display) {display = _display;};
@@ -25,6 +28,7 @@ public:
 
 	const unsigned int& get_x(){return x;};
 	const unsigned int& get_y(){return y;};
+	const char get_display(){return (const char) display;};
 	bool get_is_shot(){return is_shot;};
 	bool is_occupied() { return (boat != nullptr ? true : false);};
 
@@ -40,6 +44,8 @@ private:
 	bool is_shot;
 	bool is_hit_mark;
 	bool is_mis_mark;
+
+	float size;
 
 	Ship* boat;
 };

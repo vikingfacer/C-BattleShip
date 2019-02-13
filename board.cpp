@@ -11,6 +11,7 @@ rows(_rows), columns(_columns)
 		for (int j = 0; j < columns; j++)
 		{
 			tile* temptile = new tile( j, i, fill);
+
 			if (temptile)
 			{
 				temp.push_back(temptile);
@@ -23,6 +24,21 @@ rows(_rows), columns(_columns)
 		plan.push_back(temp);
 	}
 }
+board& board::operator=(const board& other)
+{
+	rows = other.rows;
+	columns = other.columns;
+	plan = other.plan;
+	return *this;
+}
+
+board::board(const board& other_board) 
+{
+	// const char wave_display = other_board.get(0,0).get_display();
+	plan = other_board.plan;
+		
+} // need to fix this 
+
 
 board::~board()
 {
@@ -37,9 +53,8 @@ void board::draw()
 	{
 		for( auto m : i)
 		{
-			cout << *m;
+			m->draw();
 		}
-		cout << endl;
 	}
 }
 
