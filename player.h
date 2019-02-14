@@ -13,6 +13,6 @@ public:
 	// void place_ships();
 
 	vector<Ship> ships;
-	board*  _board;
+	Board*  _board;
 
 };

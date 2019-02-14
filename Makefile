@@ -24,7 +24,7 @@ all: $(BINS)
 run: $(BIN)
 	./$(BIN)
 
-$(BIN): Ship.o board.o main.o tile.o player.o
+$(BIN): Ship.o board.o main.o tile.o player.o drawable.o
 	$(COMPILER) $(FLAGS) $^ -o $@ $(libs)
 
 memtest: run
