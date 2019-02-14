@@ -17,6 +17,7 @@ struct JShape
 
 using JShape = struct JShape;
 
+// Drawable interface
 class JDrawable
 {
 public:
