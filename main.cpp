@@ -73,30 +73,33 @@ private:
 
 int main(int argc, char const *argv[])
 {
-	InitWindow(500, 500, "BATTLE SHIP");
+	InitWindow(1300, 500, "BATTLE SHIP");
 
 	player p1;
 	shipcord sp;
 	playerInput  playerIn(0,0, 50);
+	bool validMove;
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        p1._board->remove_ship(&p1.ships[0]);
+    	if (validMove)
+	        p1._board->remove_ship(&p1.ships[0]);
 
+    
     	sp = playerIn.getInput();
+
+        validMove = p1._board->place_ship(&p1.ships[0],sp.x, sp.y, sp.h_or_v);
 
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        cout << "is this valid: " << p1._board->place_ship(&p1.ships[0],sp.x, sp.y, sp.h_or_v) << " ";
+
         p1._board->draw();
-
-        // playerIn.draw(10);
-
-
+        if (!validMove)
+        	DrawRectangle(0,0, 1300, 500, RED);
+        	p1._board->draw();
 
 		EndDrawing();
-		// sleep(.5);
     }
     return 0;
 }
