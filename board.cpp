@@ -50,12 +50,8 @@ board::~board()
 void board::draw()
 {
 	for(auto i : plan)
-	{
 		for( auto m : i)
-		{
 			m->draw();
-		}
-	}
 }
 
 
@@ -68,23 +64,20 @@ bool board::place_ship(Ship* boat, const unsigned int& _x, const unsigned int& _
 	std::vector<tile*> placement;
 
 	int boat_length = boat->get_length();
-	if ( (_x + boat_length) < rows && (_y + boat_length) < columns )
-	{
-		if(orin == horizontal)
-		{
-			for (int i = _x; i < boat_length + _x; i++)
-			{
-				placement.push_back(plan[_x][i]);
-			}
-		}else
-		if(orin == vertical)
-		{
-			for (int i = _y; i < boat_length + _y; i++)
-			{
-				placement.push_back(plan[i][_y]);
-			}
 
+	if (_x < rows && _y < columns)
+	{
+		// this finds the tile peices
+		for (int i = 0; i < boat_length; i++)
+		{
+			if(orin == horizontal && (_x + boat_length) <= rows)		
+				placement.push_back(plan[_y][i + _x]);
+			else
+			if(orin == vertical && (_y + boat_length) <= columns)
+				placement.push_back(plan[i + _y][_x]);
 		}
+
+		// checks to place the ships
 		for(auto t : placement)
 		{
 			if (t->is_occupied())
@@ -97,6 +90,8 @@ bool board::place_ship(Ship* boat, const unsigned int& _x, const unsigned int& _
 				did_it_work = true;
 			}
 		}
+		
+		// places the ship
 		if (did_it_work)
 		{
 			for (auto it : placement)
@@ -108,6 +103,15 @@ bool board::place_ship(Ship* boat, const unsigned int& _x, const unsigned int& _
 
 	return did_it_work;
 }
+
+void board::remove_ship(Ship* _boat)
+{
+	for(auto i : plan)
+		for(auto j : i)
+			if (j->get_ship() == _boat)
+				j->set_ship(nullptr);
+}
+
 
 bool board::place_shot(board* other_board, const unsigned int& _x, const unsigned int& _y)
 {

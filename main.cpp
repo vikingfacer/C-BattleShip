@@ -1,8 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
 #include <vector>
+
+#include <unistd.h>
+
 
 #include "raylib.h"
 
@@ -16,36 +18,54 @@ using std::endl;
 using std::string;
 using std::vector;
 
-class playerInput
+struct shipcord
 {
-public:
-playerInput(float _x, float _y) : x(_x/2), y(_y/2), start_x(_x), start_y(_y) {};
-
-void draw(int size)
-{
-	float _x = x, _y = y;
-	DrawRectangle(_x * 10, _y * 10, 90, 90, BLACK);
-
+	int x, y;
+	orintation h_or_v;
 };
 
-int* getInput()
+class playerInput
+{
+	// this class is only responsable for user input 
+	// it only checks to see if the input is valid game input 
+	// if the board is 100 squares it only makes sure input is within 100
+public:
+playerInput(float _x, float _y, float _max) : 
+	x(_x/2),
+	y(_y/2), 
+	start_x(_x), 
+	start_y(_y), 
+	max(_max),
+	virtical(true) {};
+
+shipcord getInput()
 {
 
-	if (IsKeyDown(KEY_RIGHT) && (x < start_x)) x += 1;
-	else
-	if (IsKeyDown(KEY_LEFT) && (x > 0))	x -= 1;
+	shipcord placement;
 
-	if (IsKeyDown(KEY_DOWN) &&(y < start_y))	y += 1;
-	else
-	if (IsKeyDown(KEY_UP) && (y > 0))	y -= 1;
+	float x_max, y_max;
 
-	int arr[2] = {x, y};
+	if (IsKeyPressed(KEY_RIGHT) && (x <= max)) x += 1;
+	else
+	if (IsKeyPressed(KEY_LEFT) && (x > 0)) x -= 1;
+
+	if (IsKeyPressed(KEY_DOWN) &&(y <= max)) y += 1;
+	else
+	if (IsKeyPressed(KEY_UP) && (y > 0)) y -= 1;
+
+	if (IsKeyPressed(KEY_F)) virtical = !virtical;
 
 	cout << "x :" << x << " y: " << y << endl;
-	return arr;
+	
+	placement.x = x;
+	placement.y = y;
+	placement.h_or_v = (virtical ? vertical : horizontal);
+	
+	return placement;
 }
 private:
-	float x,y, start_x, start_y;
+	float x,y, start_x, start_y, max;
+	bool virtical;
 	
 };
 
@@ -56,26 +76,28 @@ int main(int argc, char const *argv[])
 	InitWindow(500, 500, "BATTLE SHIP");
 
 	player p1;
-
-	playerInput  playerIn(500,500);
+	shipcord sp;
+	playerInput  playerIn(0,0, 50);
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
+        p1._board->remove_ship(&p1.ships[0]);
 
-    	playerIn.getInput();
+    	sp = playerIn.getInput();
 
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
+        cout << "is this valid: " << p1._board->place_ship(&p1.ships[0],sp.x, sp.y, sp.h_or_v) << " ";
         p1._board->draw();
 
-        playerIn.draw(10);
+        // playerIn.draw(10);
 
 
 
 		EndDrawing();
+		// sleep(.5);
     }
-	p1._board->draw();
     return 0;
 }
 
