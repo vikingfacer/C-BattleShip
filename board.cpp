@@ -1,8 +1,8 @@
 #include "board.h"
 
 
-board::board(const int& _rows, const int& _columns, char fill) :
-rows(_rows), columns(_columns)
+board::board(const float& _x, const float& _y, const int& _rows, const int& _columns, char fill) :
+x(_x), y(_y), rows(_rows), columns(_columns)
 {
 	plan = vector<vector<tile*>>();
 	for (int i = 0; i < rows; i++)
@@ -10,7 +10,7 @@ rows(_rows), columns(_columns)
 		vector<tile*> temp;
 		for (int j = 0; j < columns; j++)
 		{
-			tile* temptile = new tile( j, i, fill);
+			tile* temptile = new tile( j + static_cast<int>(x), static_cast<int>(i), fill);
 
 			if (temptile)
 			{
@@ -90,7 +90,7 @@ bool board::place_ship(Ship* boat, const unsigned int& _x, const unsigned int& _
 				did_it_work = true;
 			}
 		}
-		
+
 		// places the ship
 		if (did_it_work)
 		{

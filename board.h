@@ -16,7 +16,7 @@ class board
 {
 public:
 	board() = delete;
-	explicit board( const int& _rows, const int& _columns, char fill);
+	explicit board(const float& _x, const float& _y, const int& _rows, const int& _columns, char fill);
 	board& operator=(const board& other);
 	board(const board& other_board);
 	void draw();
@@ -35,6 +35,7 @@ public:
 private:
 	vector<vector<tile*>> plan;
 	int rows, columns;
+	float x,y;
 };
 
 #endif
