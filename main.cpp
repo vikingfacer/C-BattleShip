@@ -88,7 +88,7 @@ int main(int argc, char const *argv[])
 
     playerInput  playerIn(0,0, 50);
     bool warning, validMove;
-    board b2(0, 0, 50, 50, '~');
+    Board b2(0, 0, 50, 50, '~');
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {

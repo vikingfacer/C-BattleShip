@@ -12,28 +12,28 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-class board
+class Board
 {
 public:
-	board() = delete;
-	explicit board(const float& _x, const float& _y, const int& _rows, const int& _columns, char fill);
-	board& operator=(const board& other);
-	board(const board& other_board);
+	Board() = delete;
+	explicit Board(const float& _x, const float& _y, const int& _rows, const int& _columns, char fill);
+	Board& operator=(const Board& other);
+	Board(const Board& other_board);
 	void draw();
 
 	void remove_ship(Ship* _boat);
 	bool place_ship(Ship* boat, const unsigned int& _x, const unsigned int& _y, orintation orin = horizontal);
-	bool place_shot(board* other_board, const unsigned int& _x, const unsigned int& _y);
+	bool place_shot(Board* other_board, const unsigned int& _x, const unsigned int& _y);
 
 	bool place_hit_marker(const unsigned int& _x, const unsigned int& _y);
 	bool place_mis_marker(const unsigned int& _x, const unsigned int& _y);
 	
-	inline const tile* get(const unsigned int& _x, const unsigned int& _y) { return plan[_x][_y];};
+	inline const Tile* get(const unsigned int& _x, const unsigned int& _y) { return plan[_x][_y];};
 	inline const int& get_row(){return rows;};
 	inline const int& get_column(){return columns;};
-	~board();
+	~Board();
 private:
-	vector<vector<tile*>> plan;
+	vector<vector<Tile*>> plan;
 	int rows, columns;
 	float x,y;
 };

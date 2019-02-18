@@ -4,8 +4,8 @@
 
 player::player()
 {
-	_board =  new board(55, 0, 50, 50, '~');
 
+	_board =  new Board(55, 0, 50, 50, '~');
 	ships = std::vector<Ship>();
 	ships.push_back(Ship('#', 10));
 	ships.push_back(Ship('#', 8));
