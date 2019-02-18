@@ -37,7 +37,14 @@ playerInput(float _x, float _y, float _max) :
     start_x(_x), 
     start_y(_y), 
     max(_max),
-    virtical(true) {};
+    virtical(true) 
+{};
+
+void draw(Board* _board)
+{
+    DrawCircle( (x+ _board->get_x()) * 10 + 5, (y + _board->get_y()) * 10 + 5, 5, YELLOW);
+}
+
 
 shipcord getInput()
 {
@@ -73,7 +80,6 @@ shipcord getInput()
 private:
     float x,y, start_x, start_y, max;
     bool virtical;
-    
 };
 
 
@@ -82,16 +88,27 @@ private:
 int main(int argc, char const *argv[])
 {
     InitWindow(1300, 500, "BATTLE SHIP");
+    InitAudioDevice();
+
+    // this needs to be looped
+    Music music = LoadMusicStream("resources/Azerbaijan_national_anthem_(vocal_version).ogg");
+
+    PlayMusicStream(music);
+
     shipcord sp;
     player p1;
     auto cship = p1.ships.begin();
 
     playerInput  playerIn(0,0, 50);
     bool warning, validMove;
+    
+    // dummy targets 
     Board b2(0, 0, 50, 50, '~');
-
+    Ship  s1('#', 10);
+    b2.place_ship(&s1, 20, 20, horizontal);
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
+        UpdateMusicStream(music);        // Update music buffer with new stream data
 
 
         sp = playerIn.getInput();
@@ -127,7 +144,8 @@ int main(int argc, char const *argv[])
             DrawRectangle(0,0, 1300, 500, RED);
             p1._board->draw();
 
-
+        playerIn.draw(p1._board);
+        playerIn.draw(&b2);
 
         DrawText("SCORE" , 1100, 20, 40, BLACK);
         DrawText("0000", 1100, 60, 40, BLACK);

@@ -29,8 +29,11 @@ public:
 	bool place_mis_marker(const unsigned int& _x, const unsigned int& _y);
 	
 	inline const Tile* get(const unsigned int& _x, const unsigned int& _y) { return plan[_x][_y];};
-	inline const int& get_row(){return rows;};
-	inline const int& get_column(){return columns;};
+	inline const int get_row(){return rows;};
+	inline const int get_column(){return columns;};
+	inline const int get_x(){return x;};
+	inline const int get_y(){return y;};
+
 	~Board();
 private:
 	vector<vector<Tile*>> plan;
