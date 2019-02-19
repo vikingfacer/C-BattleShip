@@ -96,11 +96,11 @@ enum GAMESTAGE
 int main(int argc, char const *argv[])
 {
     InitWindow(1300, 500, "BATTLE SHIP");
-    // InitAudioDevice();
+    InitAudioDevice();
 
-    // this needs to be looped
-    // Music music = LoadMusicStream("resources/Azerbaijan_national_anthem_(vocal_version).ogg");
-    // PlayMusicStream(music);
+
+    Music music = LoadMusicStream("resources/Azerbaijan_national_anthem_(vocal_version).ogg");
+    PlayMusicStream(music);
 
 
     GAMESTAGE cstage = STAGE1; 
@@ -122,7 +122,7 @@ int main(int argc, char const *argv[])
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        // UpdateMusicStream(music);        // Update music buffer with new stream data
+        UpdateMusicStream(music);        // Update music buffer with new stream data
 
 
         sp = playerIn.getInput();
