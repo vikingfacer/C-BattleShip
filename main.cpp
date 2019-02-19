@@ -18,12 +18,6 @@ using std::endl;
 using std::string;
 using std::vector;
 
-struct shipcord
-{
-    int x, y;
-    orintation h_or_v;
-    bool place_ship;
-};
 
 class playerInput
 {
@@ -85,64 +79,80 @@ private:
 
 
 
+//  I want to have the game stages in a vector of functions
+// so each stage can be a function 
+// this would be more flexable then a ifelse stage1, stage2, ect...
+// std::vector<bool (*)()> GameStages;
+
+enum GAMESTAGE
+{
+    STAGE0 = 0,
+    STAGE1,
+    STAGE2,
+    STAGE3,
+};
+
+
 int main(int argc, char const *argv[])
 {
     InitWindow(1300, 500, "BATTLE SHIP");
-    InitAudioDevice();
+    // InitAudioDevice();
 
     // this needs to be looped
-    Music music = LoadMusicStream("resources/Azerbaijan_national_anthem_(vocal_version).ogg");
+    // Music music = LoadMusicStream("resources/Azerbaijan_national_anthem_(vocal_version).ogg");
+    // PlayMusicStream(music);
 
-    PlayMusicStream(music);
+
+    GAMESTAGE cstage = STAGE1; 
+
 
     shipcord sp;
     player p1;
     auto cship = p1.ships.begin();
 
+
+
     playerInput  playerIn(0,0, 50);
-    bool warning, validMove;
+    bool warning;
     
     // dummy targets 
     Board b2(0, 0, 50, 50, '~');
     Ship  s1('#', 10);
     b2.place_ship(&s1, 20, 20, horizontal);
+
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        UpdateMusicStream(music);        // Update music buffer with new stream data
+        // UpdateMusicStream(music);        // Update music buffer with new stream data
 
 
         sp = playerIn.getInput();
 
-        if (cship != p1.ships.end())
+        switch(cstage)
         {
-            // this is ship placement 
-            if (validMove && sp.place_ship)
-            {
-                cship++;
-            }
-            else if (validMove)
-            {
-                p1._board->remove_ship(&(*cship));
-            }
+            case STAGE1:
+                warning = p1.PlaceShip(cship,sp);
+            break;
+            case STAGE2:
+                // shot opponent 
+                // get shot by opponent
+            break;
+        }
+    
 
-            validMove = p1._board->place_ship(&(*cship), sp.x, sp.y, sp.h_or_v);
-            // this is the end of the ship placement 
-            // warning if not a valid move
-            warning = !validMove;
-        }
-        else
-        {
-            warning = false;
-        }
+
 
         BeginDrawing();
-        ClearBackground(GRAY);
-        b2.draw();
-
-        p1._board->draw();
+        
         if (warning)
-            DrawRectangle(0,0, 1300, 500, RED);
-            p1._board->draw();
+        {
+            ClearBackground(RED);
+        }else
+        {
+            ClearBackground(GRAY);
+        }
+
+        b2.draw();
+        p1._board->draw();
 
         playerIn.draw(p1._board);
         playerIn.draw(&b2);
