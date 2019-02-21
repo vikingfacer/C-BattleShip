@@ -141,6 +141,7 @@ int main(int argc, char const *argv[])
                 if (cship == p1.ships.end())
                 {
                 	cstage = STAGE2;
+                	warning = false;
                 }
             break;
             case STAGE2:
