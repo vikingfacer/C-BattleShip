@@ -1,5 +1,5 @@
 COMPILER="g++"
-FLAGS="-std=c++11"
+FLAGS="-std=c++14"
 libs="-lboost_regex"
 BIN=test
 

@@ -115,7 +115,7 @@ void Board::remove_ship(Ship* _boat)
 
 bool Board::place_shot(Board* other_board, const unsigned int& _x, const unsigned int& _y)
 {
-    Tile* current_tile = other_board->plan[_x][_y];
+    Tile* current_tile = other_board->plan[_y][_x];
 
     // check if a ship is there 
     // if a ship exists there then damage the ship 
@@ -126,12 +126,12 @@ bool Board::place_shot(Board* other_board, const unsigned int& _x, const unsigne
         current_tile->get_ship()->set_damage(current_tile->get_ship()->get_damage() + 1);
         current_tile->set_is_shot(true);
 
-        place_hit_marker(_x, _y);
+        other_board->place_hit_marker(_x, _y);
         return true;
     }
     else
     {
-        place_mis_marker(_x, _y);
+        other_board->place_mis_marker(_x, _y);
         return false;
     }
 }
@@ -141,7 +141,7 @@ bool Board::place_shot(Board* other_board, const unsigned int& _x, const unsigne
 
 bool Board::place_hit_marker(const unsigned int& _x, const unsigned int& _y)
 {
-    Tile* current_tile = plan[_x][_y];
+    Tile* current_tile = plan[_y][_x];
 
     if(!current_tile->get_is_shot())
     {
@@ -154,7 +154,7 @@ bool Board::place_hit_marker(const unsigned int& _x, const unsigned int& _y)
 }
 bool Board::place_mis_marker(const unsigned int& _x, const unsigned int& _y)
 {
-    Tile* current_tile = plan[_x][_y];
+    Tile* current_tile = plan[_y][_x];
 
     if(!current_tile->get_is_shot())
     {

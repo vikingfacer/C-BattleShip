@@ -18,7 +18,7 @@ using std::endl;
 using std::string;
 using std::vector;
 
-
+// This should return keyboard state only
 class playerInput
 {
     // this class is only responsable for user input 
@@ -31,14 +31,14 @@ playerInput(float _x, float _y, float _max) :
     start_x(_x), 
     start_y(_y), 
     max(_max),
-    virtical(true) 
+    virtical(true),
+    music(true)
 {};
 
 void draw(Board* _board)
 {
     DrawCircle( (x+ _board->get_x()) * 10 + 5, (y + _board->get_y()) * 10 + 5, 5, YELLOW);
 }
-
 
 shipcord getInput()
 {
@@ -61,8 +61,10 @@ shipcord getInput()
     else{
         placement.place_ship = false;}
 
+    if(IsKeyPressed(KEY_M)) music = !music;
 
-    cout << "x :" << x << " y: " << y << endl;
+
+    cout << "x :" << x << " y: " << y << " music: "<< music<< endl;
     
     placement.x = x;
     placement.y = y;
@@ -71,9 +73,11 @@ shipcord getInput()
     return placement;
 }
 
+const bool getMusic() {return music;};
+
 private:
     float x,y, start_x, start_y, max;
-    bool virtical;
+    bool virtical, music;
 };
 
 
@@ -113,8 +117,8 @@ int main(int argc, char const *argv[])
 
 
     playerInput  playerIn(0,0, 50);
-    bool warning;
-    
+    bool warning, playing_music;
+    Vector2 point = {300,300};
     // dummy targets 
     Board b2(0, 0, 50, 50, '~');
     Ship  s1('#', 10);
@@ -122,18 +126,29 @@ int main(int argc, char const *argv[])
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        UpdateMusicStream(music);        // Update music buffer with new stream data
-
-
         sp = playerIn.getInput();
+
+    	if(playerIn.getMusic())
+    	{
+        	UpdateMusicStream(music);        // Update music buffer with new stream data
+    	}
+
 
         switch(cstage)
         {
             case STAGE1:
                 warning = p1.PlaceShip(cship,sp);
+                if (cship == p1.ships.end())
+                {
+                	cstage = STAGE2;
+                }
             break;
             case STAGE2:
                 // shot opponent 
+            	if (sp.place_ship)
+            	{
+	            	p1._board->place_shot(&b2, sp.x, sp.y);
+    			}
                 // get shot by opponent
             break;
         }
@@ -143,27 +158,26 @@ int main(int argc, char const *argv[])
 
         BeginDrawing();
         
-        if (warning)
-        {
-            ClearBackground(RED);
-        }else
-        {
-            ClearBackground(GRAY);
-        }
+	        if (warning)
+	        {
+	            ClearBackground(RED);
+	        }else
+	        {
+	            ClearBackground(GRAY);
+	        }
 
-        b2.draw();
-        p1._board->draw();
+	        b2.draw();
+	        p1._board->draw();
 
-        playerIn.draw(p1._board);
-        playerIn.draw(&b2);
+	        playerIn.draw(p1._board);
+	        playerIn.draw(&b2);
 
-        DrawText("SCORE" , 1100, 20, 40, BLACK);
-        DrawText("0000", 1100, 60, 40, BLACK);
-        DrawText("HEALTH" , 1100, 120, 40, BLACK);
-        DrawText("0", 1100, 160, 40, BLACK);
-        DrawText("Direction:" , 1100, 300, 40, BLACK);
+	        DrawText("SCORE" , 1100, 20, 40, BLACK);
+	        DrawText("0000", 1100, 60, 40, BLACK);
+	        DrawText("HEALTH" , 1100, 120, 40, BLACK);
+	        DrawText("0", 1100, 160, 40, BLACK);
+	        DrawText("Direction:" , 1100, 300, 40, BLACK);
 
-        
         EndDrawing();
     }
     return 0;

@@ -42,12 +42,31 @@ void Tile::draw() const
     // DrawRectangle(int posX, int posY, int width, int height, Color color);
     JShape shape{ x * 10, y * 10, 9, 9 };
 
+    // almost all the drawable elements can be layered 
+    // the misses and hits
+
     if (boat != nullptr)
     {
         drawRectangle(shape, BLACK);
+	
+	    if(is_shot)
+	    {
+	    	drawRandPolygone(shape, RED);
+	    }
     }
     else
     {
         drawRectangle(shape, BLUE);
+   	    if(is_mis_mark)
+	    {
+	    	drawRandPolygone(shape, RAYWHITE);
+	    }
     }
+
+
+
+
+
+
+
 }

@@ -4,6 +4,7 @@
 #include "raylib.h"
 
 #include <utility>
+#include <experimental/random>
 
 using JColor = Color;
 
@@ -31,6 +32,8 @@ public:
 
 protected:
   virtual void drawRectangle(const JShape &, const JColor &) const;
+
+  virtual void drawRandPolygone(const JShape&, const JColor&) const;
 };
 
 #endif // DRAWABLE_H
