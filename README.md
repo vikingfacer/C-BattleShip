@@ -4,10 +4,14 @@ Basic BattleShip game build with raylib
 
 # Screen Shots
 
-![unfilled ship graveyard](screenShots/screenshot0.png)
+![Game Intro](screenShots/screenshot5.png)
 
-![illegal move](screenShots/screenshot2.png)
+![Game Splash Screen](screenShots/screenshot4.png)
 
-![filled ship graveyard](screenShots/screenshot1.png)
+![Unfilled Ship Graveyard](screenShots/screenshot0.png)
+
+![Illegal Move](screenShots/screenshot2.png)
+
+![Filled Ship Graveyard](screenShots/screenshot1.png)
 
 ![Shooting](screenShots/screenshot3.png)

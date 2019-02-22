@@ -138,7 +138,10 @@ int main(int argc, char const *argv[])
     PlayMusicStream(music);
 
 
-    GAMESTAGE cstage = STAGE2; 
+    GAMESTAGE cstage = STAGE0; 
+
+
+
     string stageDirections("you done goofed");
     int score = 0, health = 0;
 
@@ -227,9 +230,9 @@ int main(int argc, char const *argv[])
                 case STAGE0:
                     ClearBackground(RED);
                     DrawText("BATTLE " , 5, 0, 300, BLACK);
-                    DrawText("  SHIP ", 0, 250, 300, BLACK);
+                    DrawText("  SHIP ", 200, 250, 220, BLACK);
                     DrawText("PRESS ENTER (to continue)", 500, 250, 20, BLACK);
-                    DrawText("LEFT PLANNEL ENEMY SHIPYARD RIGHT PANNEL YOUR SHIPYARD", 300, 420, 20, BLACK);
+                    DrawText("LEFT PLANNEL ENEMY SHIPYARD RIGHT PANNEL YOUR SHIPYARD", 300, 450, 20, BLACK);
 
                 break;
                 case STAGE2:
