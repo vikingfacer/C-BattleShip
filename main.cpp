@@ -81,6 +81,35 @@ private:
 };
 
 
+void ScoreBoard(const int& _health =0, const int& _score = 0, const string& _direction = string("you goofed\n dummy ")){
+    char score[7], health[7];
+
+    if(_health > 999999){
+        sprintf(health," %5d", -666);
+    }
+    else
+    {
+        sprintf(health," %5d", _health);
+    }
+
+    if(_score > 999999){
+        sprintf(score," %5d", -666);
+    }
+    else
+    {
+        sprintf(score," %5d", _score);
+    }
+
+    DrawText("SCORE" , 1070, 20, 40, BLACK);
+    DrawText(score, 1070, 60, 35, BLACK);
+
+    DrawText("HEALTH" , 1070, 100, 40, BLACK);
+    DrawText(health , 1070, 140, 35, BLACK);
+
+    DrawText("Direction:" , 1070, 180, 40, BLACK);
+    DrawText(_direction.c_str() , 1070, 220, 30, BLACK);
+
+}
 
 
 //  I want to have the game stages in a vector of functions
@@ -94,7 +123,9 @@ enum GAMESTAGE
     STAGE1,
     STAGE2,
     STAGE3,
+    STAGE4,
 };
+
 
 
 int main(int argc, char const *argv[])
@@ -107,14 +138,13 @@ int main(int argc, char const *argv[])
     PlayMusicStream(music);
 
 
-    GAMESTAGE cstage = STAGE1; 
-
+    GAMESTAGE cstage = STAGE2; 
+    string stageDirections("you done goofed");
+    int score = 0, health = 0;
 
     shipcord sp;
     player p1;
     auto cship = p1.ships.begin();
-
-
 
     playerInput  playerIn(0,0, 50);
     bool warning, playing_music;
@@ -128,57 +158,97 @@ int main(int argc, char const *argv[])
     {
         sp = playerIn.getInput();
 
-    	if(playerIn.getMusic())
-    	{
-        	UpdateMusicStream(music);        // Update music buffer with new stream data
-    	}
+        if(playerIn.getMusic())
+        {
+            UpdateMusicStream(music);        // Update music buffer with new stream data
+        }
 
 
         switch(cstage)
         {
+            case STAGE0:
+                if (sp.place_ship) cstage = STAGE1;
+                // CORNY SPLASH SCREEN
+            break;
+
             case STAGE1:
-                warning = p1.PlaceShip(cship,sp);
+
+                // this needs to be a the beginning of stage1
                 if (cship == p1.ships.end())
                 {
-                	cstage = STAGE2;
-                	warning = false;
+                    cstage = STAGE2;
+                    warning = false;
                 }
+
+                stageDirections = string("Set up Ships\
+                                          \nEnter: confirm\
+                                          \nArrow Keys:\
+                                          \n move\
+                                          \n F: flip V/H\
+                                          \n M: Mute");
+                warning = p1.PlaceShip(cship,sp);
+
             break;
+            
             case STAGE2:
-                // shot opponent 
-            	if (sp.place_ship)
-            	{
-	            	p1._board->place_shot(&b2, sp.x, sp.y);
-    			}
+                if (sp.place_ship) cstage = STAGE3;
+                // CORNY SPLASH SCREEN
+            break;
+
+            case STAGE3:
+                stageDirections = string("Shoot\
+                                        \nopponent\
+                                        \nEnter: confirm\
+                                        \nArrow Keys:\
+                                        \n move");
+                // shoot opponent 
+                if (sp.place_ship)
+                {
+                    p1._board->place_shot(&b2, sp.x, sp.y);
+                }
                 // get shot by opponent
             break;
+        default:
+        break;
         }
     
-
-
-
         BeginDrawing();
         
-	        if (warning)
-	        {
-	            ClearBackground(RED);
-	        }else
-	        {
-	            ClearBackground(GRAY);
-	        }
+            if (warning)
+            {
+                ClearBackground(RED);
+            }else
+            {
+                ClearBackground(GRAY);
+            }
 
-	        b2.draw();
-	        p1._board->draw();
+            switch(cstage)
+            {
+                case STAGE0:
+                    ClearBackground(RED);
+                    DrawText("BATTLE " , 5, 0, 300, BLACK);
+                    DrawText("  SHIP ", 0, 250, 300, BLACK);
+                    DrawText("PRESS ENTER (to continue)", 500, 250, 20, BLACK);
+                    DrawText("LEFT PLANNEL ENEMY SHIPYARD RIGHT PANNEL YOUR SHIPYARD", 300, 420, 20, BLACK);
 
-	        playerIn.draw(p1._board);
-	        playerIn.draw(&b2);
+                break;
+                case STAGE2:
+                    ClearBackground(RED);
+                    DrawText("DESTORY " , 5, 0, 260, BLACK);
+                    DrawText(" THE ENEMY", 0, 250, 190, BLACK);
+                    DrawText("PRESS ENTER (to continue)", 500, 250, 20, BLACK);
+                    DrawText("LEFT PLANNEL ENEMY SHIPYARD RIGHT PANNEL YOUR SHIPYARD", 300, 420, 20, BLACK);
 
-	        DrawText("SCORE" , 1100, 20, 40, BLACK);
-	        DrawText("0000", 1100, 60, 40, BLACK);
-	        DrawText("HEALTH" , 1100, 120, 40, BLACK);
-	        DrawText("0", 1100, 160, 40, BLACK);
-	        DrawText("Direction:" , 1100, 300, 40, BLACK);
+                break;
 
+                default:
+                    b2.draw();
+                    p1._board->draw();
+                    playerIn.draw(p1._board);
+                    playerIn.draw(&b2);
+                    ScoreBoard(0, 0, stageDirections);
+                break;
+            }
         EndDrawing();
     }
     return 0;

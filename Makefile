@@ -1,7 +1,7 @@
 COMPILER="g++"
 FLAGS="-std=c++14"
 libs="-lboost_regex"
-BIN=test
+BIN=BATTLESHIP
 
 
 
