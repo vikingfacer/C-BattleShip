@@ -1,5 +1,5 @@
 #ifndef BOARD_H
-#define BOARD_H 
+#define BOARD_H
 
 
 #include <vector>
@@ -27,8 +27,8 @@ public:
 
 	bool place_hit_marker(const unsigned int& _x, const unsigned int& _y);
 	bool place_mis_marker(const unsigned int& _x, const unsigned int& _y);
-	
-	inline const Tile* get(const unsigned int& _x, const unsigned int& _y) { return plan[_x][_y];};
+
+	inline Tile* get(const unsigned int& _x, const unsigned int& _y) { return plan[_x][_y];}; // this needs to check bounds
 	inline const int get_row(){return rows;};
 	inline const int get_column(){return columns;};
 	inline const int get_x(){return x;};

@@ -1,3 +1,7 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
+
 
 #include "Ship.h"
 #include "board.h"
@@ -17,12 +21,15 @@ class player
 {
 public:
 	player();
+    player(int x, int y);
 	~player();
 	// void place_ships();
-	bool PlaceShip( std::vector<Ship>::iterator& _cship, const shipcord& sp);
-
+	bool virtual PlaceShip( std::vector<Ship>::iterator& _cship, const shipcord& sp);
+	int getHealth();
 	vector<Ship> ships;
-	Board*  _board;
+	Board  _board;
 	bool validMove;
 
 };
+
+#endif

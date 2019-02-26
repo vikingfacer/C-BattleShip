@@ -124,14 +124,14 @@ bool Board::place_shot(Board* other_board, const unsigned int& _x, const unsigne
     if (current_tile->is_occupied() && !current_tile->get_is_shot())
     {
         current_tile->get_ship()->set_damage(current_tile->get_ship()->get_damage() + 1);
-        current_tile->set_is_shot(true);
-
-        other_board->place_hit_marker(_x, _y);
-        return true;
+        return other_board->place_hit_marker(_x, _y);
+        
     }
     else
     {
         other_board->place_mis_marker(_x, _y);
+        current_tile->set_is_shot(true);
+
         return false;
     }
 }
@@ -146,7 +146,7 @@ bool Board::place_hit_marker(const unsigned int& _x, const unsigned int& _y)
     if(!current_tile->get_is_shot())
     {
         current_tile->set_is_hit_mark(true);
-        // current_tile->set_is_shot(true);
+        current_tile->set_is_shot(true);
         return true;
     }
 
@@ -159,7 +159,7 @@ bool Board::place_mis_marker(const unsigned int& _x, const unsigned int& _y)
     if(!current_tile->get_is_shot())
     {
         current_tile->set_is_mis_mark(true);
-        // current_tile->set_is_shot(true);
+        current_tile->set_is_shot(true);
         return true;
     }
     return false;

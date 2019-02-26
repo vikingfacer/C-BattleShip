@@ -28,7 +28,7 @@ public:
   const unsigned int &get_x() { return x; };
   const unsigned int &get_y() { return y; };
   const char get_display() { return (const char)display; };
-  bool get_is_shot() { return is_shot; };
+  const bool get_is_shot() { return is_shot; };
   bool is_occupied() { return (boat != nullptr ? true : false); };
 
   ~Tile(){};

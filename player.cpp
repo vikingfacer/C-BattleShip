@@ -2,10 +2,8 @@
 
 
 
-player::player()
+player::player() : _board(Board(55, 0, 50, 50, '~'))
 {
-
-	_board =  new Board(55, 0, 50, 50, '~');
 	ships = std::vector<Ship>();
 	ships.push_back(Ship('#', 10));
 	ships.push_back(Ship('#', 8));
@@ -20,10 +18,28 @@ player::player()
 	validMove = false;
 }
 
-player::~player()
+
+player::player(int x, int y) : _board(Board(x, y, 50, 50, '~'))
 {
-	delete _board;
+    ships = std::vector<Ship>();
+    ships.push_back(Ship('#', 10));
+    ships.push_back(Ship('#', 8));
+    ships.push_back(Ship('#', 8));
+    ships.push_back(Ship('#', 5));
+    ships.push_back(Ship('#', 5));
+    ships.push_back(Ship('#', 5));
+    ships.push_back(Ship('#', 2));
+    ships.push_back(Ship('#', 2));
+    ships.push_back(Ship('#', 2));
+    ships.push_back(Ship('#', 2));
+    validMove = false;
 }
+
+
+
+
+player::~player()
+{}
 
 
 bool player::PlaceShip( std::vector<Ship>::iterator& _cship, const shipcord& sp)
@@ -33,18 +49,18 @@ bool player::PlaceShip( std::vector<Ship>::iterator& _cship, const shipcord& sp)
 
     if (_cship != ships.end())
     {
-        // this is ship placement 
+        // this is ship placement
         if (validMove && sp.place_ship)
         {
             _cship++;
         }
         else if (validMove)
         {
-            _board->remove_ship(&(*_cship));
+            _board.remove_ship(&(*_cship));
         }
-        
-        validMove = _board->place_ship(&(*_cship), sp.x, sp.y, sp.h_or_v);
-        // this is the end of the ship placement 
+
+        validMove = _board.place_ship(&(*_cship), sp.x, sp.y, sp.h_or_v);
+        // this is the end of the ship placement
         // warning if not a valid move
         warning = !validMove;
     }
@@ -53,4 +69,14 @@ bool player::PlaceShip( std::vector<Ship>::iterator& _cship, const shipcord& sp)
         warning = false;
     }
     return warning;
+}
+
+int player::getHealth()
+{
+	int health = 0;
+	for( auto boat : ships)
+	{
+		health += boat.get_health();
+	}
+	return health;
 }

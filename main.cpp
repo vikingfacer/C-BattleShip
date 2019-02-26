@@ -4,7 +4,8 @@
 #include <vector>
 
 #include <unistd.h>
-
+#include <execinfo.h>
+#include <signal.h>
 
 #include "raylib.h"
 
@@ -12,6 +13,9 @@
 #include "board.h"
 #include "Ship.h"
 #include "player.h"
+#include "COMplayer.h"
+
+void handler(int sig);
 
 using std::cout;
 using std::endl;
@@ -21,16 +25,18 @@ using std::vector;
 // This should return keyboard state only
 class playerInput
 {
-    // this class is only responsable for user input 
-    // it only checks to see if the input is valid game input 
+    // this class is only responsable for user input
+    // it only checks to see if the input is valid game input
     // if the board is 100 squares it only makes sure input is within 100
 public:
-playerInput(float _x, float _y, float _max) : 
+playerInput(float _x, float _y, float _max) :
     x(_x/2),
-    y(_y/2), 
-    start_x(_x), 
-    start_y(_y), 
+    y(_y/2),
+    start_x(_x),
+    start_y(_y),
     max(_max),
+    lastx(0),
+    lasty(0),
     virtical(true),
     music(true)
 {};
@@ -63,20 +69,24 @@ shipcord getInput()
 
     if(IsKeyPressed(KEY_M)) music = !music;
 
+    // if (lasty != y || lastx != x)
+    // {
+    //     cout << "x :" << x << " y: " << y << " music: "<< music << " ";
+    // }
+    // lasty = y;
+    // lastx = x;
 
-    cout << "x :" << x << " y: " << y << " music: "<< music<< endl;
-    
     placement.x = x;
     placement.y = y;
     placement.h_or_v = (virtical ? vertical : horizontal);
-    
+
     return placement;
 }
 
 const bool getMusic() {return music;};
 
 private:
-    float x,y, start_x, start_y, max;
+    float x,y, start_x, start_y, max, lastx, lasty;
     bool virtical, music;
 };
 
@@ -113,7 +123,7 @@ void ScoreBoard(const int& _health =0, const int& _score = 0, const string& _dir
 
 
 //  I want to have the game stages in a vector of functions
-// so each stage can be a function 
+// so each stage can be a function
 // this would be more flexable then a ifelse stage1, stage2, ect...
 // std::vector<bool (*)()> GameStages;
 
@@ -124,12 +134,16 @@ enum GAMESTAGE
     STAGE2,
     STAGE3,
     STAGE4,
+    STAGE5,
+    STAGE6,
 };
 
 
 
 int main(int argc, char const *argv[])
 {
+    signal(SIGSEGV, handler);   // install our handler
+
     InitWindow(1300, 500, "BATTLE SHIP");
     InitAudioDevice();
 
@@ -137,25 +151,28 @@ int main(int argc, char const *argv[])
     Music music = LoadMusicStream("resources/Azerbaijan_national_anthem_(vocal_version).ogg");
     PlayMusicStream(music);
 
+    Sound thunder = LoadSoundFromWave(LoadWave("resources/More_Thunder-Mike_Koenig.wav"));
+    Sound cannon1 = LoadSoundFromWave(LoadWave("resources/Cannon-SoundBible.wav"));
+    // Sound cannon2 = LoadSoundFromWave(LoadWave("resources/Grenade-SoundBible.wav"));
 
-    GAMESTAGE cstage = STAGE0; 
+    GAMESTAGE cstage = STAGE0;
 
 
 
     string stageDirections("you done goofed");
     int score = 0, health = 0;
 
-    shipcord sp;
-    player p1;
+    player p1(55, 0);
     auto cship = p1.ships.begin();
-
     playerInput  playerIn(0,0, 50);
+    shipcord sp;
+
+    COMplayer p2(0,0);
+    auto com_cship = p2.ships.begin();
+
+
     bool warning, playing_music;
-    Vector2 point = {300,300};
-    // dummy targets 
-    Board b2(0, 0, 50, 50, '~');
-    Ship  s1('#', 10);
-    b2.place_ship(&s1, 20, 20, horizontal);
+
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
@@ -170,12 +187,12 @@ int main(int argc, char const *argv[])
         switch(cstage)
         {
             case STAGE0:
+                PlaySound(thunder);
                 if (sp.place_ship) cstage = STAGE1;
                 // CORNY SPLASH SCREEN
             break;
 
             case STAGE1:
-
                 // this needs to be a the beginning of stage1
                 if (cship == p1.ships.end())
                 {
@@ -191,32 +208,69 @@ int main(int argc, char const *argv[])
                                           \n M: Mute");
                 warning = p1.PlaceShip(cship,sp);
 
+                p2.PlaceShip(com_cship);
+
             break;
-            
+
             case STAGE2:
+                PlaySound(thunder);
                 if (sp.place_ship) cstage = STAGE3;
                 // CORNY SPLASH SCREEN
             break;
 
             case STAGE3:
+                health = p1.getHealth();
                 stageDirections = string("Shoot\
                                         \nopponent\
                                         \nEnter: confirm\
                                         \nArrow Keys:\
                                         \n move");
-                // shoot opponent 
-                if (sp.place_ship)
+
+                // shoot opponent
+                // if (sp.place_ship)
                 {
-                    p1._board->place_shot(&b2, sp.x, sp.y);
+                    // cout << "is shot  " << p1._board.get(sp.y, sp.x)->get_is_shot() << " " <<  std::flush;
+                    if(!p1._board.get(sp.y, sp.x)->get_is_shot() )
+                    {
+                        // PlaySound(cannon1);
+                    }
+                    if(p1._board.place_shot(&p2._board, sp.x, sp.y))
+                    {
+                        // PlaySound(cannon1);
+                    }
+                    p2.FireShot(&p1._board);
                 }
+
                 // get shot by opponent
+
+
+
+                health = p1.getHealth();
+                // check for win/lose
+
+                if (health == 0)
+                {
+                    // this game defaults to the player losing before the computer
+                    cstage = STAGE5;
+                }
+
             break;
+            case STAGE4:
+                // YOU WIN
+            break;
+            case STAGE5:
+                // YOU LOSE
+            break;
+            case STAGE6:
+                // everything is reset
+                // clean up all garbage
+                // or exit
         default:
         break;
         }
-    
+
         BeginDrawing();
-        
+
             if (warning)
             {
                 ClearBackground(RED);
@@ -243,13 +297,12 @@ int main(int argc, char const *argv[])
                     DrawText("LEFT PLANNEL ENEMY SHIPYARD RIGHT PANNEL YOUR SHIPYARD", 300, 420, 20, BLACK);
 
                 break;
-
                 default:
-                    b2.draw();
-                    p1._board->draw();
-                    playerIn.draw(p1._board);
-                    playerIn.draw(&b2);
-                    ScoreBoard(0, 0, stageDirections);
+                    p2._board.draw();
+                    p1._board.draw();
+                    playerIn.draw(&p1._board);
+                    playerIn.draw(&p2._board);
+                    ScoreBoard(health, score, stageDirections);
                 break;
             }
         EndDrawing();
@@ -261,3 +314,16 @@ int main(int argc, char const *argv[])
 
 
 
+
+void handler(int sig) {
+  void *array[10];
+  size_t size;
+
+  // get void*'s for all entries on the stack
+  size = backtrace(array, 10);
+
+  // print out all the frames to stderr
+  fprintf(stderr, "Error: signal %d:\n", sig);
+  backtrace_symbols_fd(array, size, STDERR_FILENO);
+  exit(1);
+}
