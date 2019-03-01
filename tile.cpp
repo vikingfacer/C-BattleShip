@@ -42,13 +42,14 @@ void Tile::draw() const
     // DrawRectangle(int posX, int posY, int width, int height, Color color);
     JShape shape{ x * 10, y * 10, 9, 9 };
 
-    // almost all the drawable elements can be layered 
+
+    // almost all the drawable elements can be layered
     // the misses and hits
 
     if (boat != nullptr)
     {
         drawRectangle(shape, BLACK);
-	
+
 	    if(is_shot)
 	    {
 	    	drawRandPolygone(shape, RED);
@@ -56,6 +57,17 @@ void Tile::draw() const
     }
     else
     {
+
+        auto change = std::chrono::system_clock::now().time_since_epoch().count();
+        if (change % 2 == 0)
+        {
+            shape.x -= 1;
+        }else
+        if (change % 73 == 0)
+        {
+            shape.y -= 1;
+        }
+
         drawRectangle(shape, BLUE);
    	    if(is_mis_mark)
 	    {

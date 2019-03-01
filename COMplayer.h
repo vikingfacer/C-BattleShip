@@ -1,10 +1,11 @@
 #include <random>
 #include <chrono>
-#include <list>
+#include <set>
 #include <utility>
+#include <algorithm>
 #include "player.h"
 
-using std::list;
+using std::set;
 using std::pair;
 using std::make_pair;
 
@@ -19,6 +20,8 @@ enum HitOrMiss
 
 class COMplayer : public player
 {
+
+
 public:
 	COMplayer();
     COMplayer(int x, int y);
@@ -27,10 +30,15 @@ public:
     bool FireShot(Board* _other_board);
 
 private:
+    // this should print the stats of the board_tracker
+    void stats(){};
+    vector<pair<int, int>> discoverNotShot();
+    vector<pair<int, int>> getCrossPeices(const pair<int, int>& );
+    bool makeHit(Board* _other_board, const int& _x, const int& _y);
+    bool fireRandShot(Board* _other_board);
     // x and y could be difference sizes if implemented that why
     // (if someone was cruel and wanted to see the world burn)
-    std::uniform_int_distribution<int> x_dist;
-    std::uniform_int_distribution<int> y_dist;
+    // std::uniform_int_distribution<int>  pair_dist;
     std::default_random_engine gen;
 
     int last_x, last_y;
@@ -39,3 +47,4 @@ private:
     pair<int,int> last_shot;
 
 };
+// bool(*)(const pair<int,int>& lhs, const pair<int,int>& rhs);
