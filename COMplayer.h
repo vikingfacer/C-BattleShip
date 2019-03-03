@@ -28,10 +28,14 @@ public:
     ~COMplayer() {};
 	bool PlaceShip( std::vector<Ship>::iterator& _cship);
     bool FireShot(Board* _other_board);
+    void stats();
+
+    void drawLastHit();
 
 private:
-    // this should print the stats of the board_tracker
-    void stats(){};
+
+    pair<int, int> findNextHit(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair);
+    bool InRange(const pair<int, int>& _cpair);
     vector<pair<int, int>> discoverNotShot();
     vector<pair<int, int>> getCrossPeices(const pair<int, int>& );
     bool makeHit(Board* _other_board, const int& _x, const int& _y);
@@ -47,4 +51,16 @@ private:
     pair<int,int> last_shot;
 
 };
+
+template<class T>
+const pair<T, T> operator-(pair<T, T>lhs, pair<T, T>rhs)
+{
+    return pair<T,T>(lhs.first - rhs.first, lhs.second - rhs.second);
+}
+template<class T>
+const pair<T, T> operator+(pair<T, T>lhs, pair<T, T>rhs)
+{
+    return pair<T,T>(lhs.first + rhs.first, lhs.second + rhs.second);
+}
+
 // bool(*)(const pair<int,int>& lhs, const pair<int,int>& rhs);

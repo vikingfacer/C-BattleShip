@@ -90,13 +90,6 @@ vector<pair<int, int>> COMplayer::getCrossPeices(const pair<int,int>& _last_shot
     {
         cross.push_back(pair<int,int>(_last_shot.first, _last_shot.second +1));
     }
-
-    for(auto t: cross)
-    {
-        cout << "x: " << t.first << ", y: " << t.second << std::flush;
-    }
-    cout << endl;
-
     return cross;
 }
 
@@ -135,6 +128,47 @@ bool COMplayer::makeHit(Board* _other_board, const int& _x, const int& _y)
     return hit;
 }
 
+bool COMplayer::InRange(const pair<int, int>& _cpair)
+{
+    //  these are just separated for clarity
+    bool condition1 = _cpair.first >= 0 && _cpair.second >= 0;
+    bool condition2 = _cpair.first < board_tracker.size() && _cpair.second < board_tracker[0].size();
+
+    return condition1 && condition2;
+}
+
+pair<int, int> COMplayer::findNextHit(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair)
+{
+    pair<int,int> foundpair(_opp_pair);
+
+    // we only should need to search up
+    if (_cpair.first == _opp_pair.first)
+    {
+        for(int i = _opp_pair.second; i < board_tracker.size(); i++)
+        {
+            if (board_tracker[_opp_pair.first][i] == NONE)
+            {
+                foundpair.first = _opp_pair.first;
+                foundpair.second= i;
+                break;
+            }
+        }
+    }
+    else
+    if(_cpair.second == _opp_pair.second)
+    {
+        for(int i = _opp_pair.first; i < board_tracker[0].size(); i++)
+        {
+            if (board_tracker[i][_opp_pair.second] == NONE)
+            {
+                foundpair.first = i;
+                foundpair.second= _opp_pair.second;
+                break;
+            }
+        }
+    }
+    return foundpair;
+}
 
 
 bool COMplayer::FireShot(Board* _other_board)
@@ -143,7 +177,6 @@ bool COMplayer::FireShot(Board* _other_board)
     if (random_shot)
     {
         random_shot = !fireRandShot(_other_board);
-        // random_shot = true;
     }
     else
     {
@@ -154,44 +187,128 @@ bool COMplayer::FireShot(Board* _other_board)
         // if there are no NONE tiles or Hit tiles to discover then do a random shot and return
         if (cross_peices.size() == 0)
         {
-            random_shot = true;
-            did_we_fire = false;
+            random_shot = !fireRandShot(_other_board);
+            return true;
         }
         else
         {
-            //// for finding the next shot there are 3/4 options per ordination
-
-            //// if we find a tile that has not been hit we hit that
             for(auto t : cross_peices)
             {
-                if (board_tracker[t.first][t.second] == HitOrMiss::NONE)
-                {
-                   random_shot = !makeHit(_other_board, t.first, t.second);
-                   // return true;
-                }
+                cout << "x: " << t.first << " y: " << t.second << endl;
             }
 
-            // for(auto t : cross_peices)
-            // {
-            //     if (board_tracker[t.first][t.second] == HitOrMiss::Hit)
-            //     {
-            //         // need to find the opposite tile from the hit tile
-            //         int new_x = last_shot.first - (last_shot.first - t.first);
-            //         int new_y = - (last_shot.second - t.second);
+            for(auto t : cross_peices)
+            {
+                if (board_tracker[t.first][t.second] == HitOrMiss::HIT)
+                {
+                    // need to find the opposite tile from the hit tile
+                    auto  opposite_tile = last_shot + (last_shot - t);
 
-            //         if (last_shot.fist - difference_x < 0 || last_shot.second - difference_y < 0 || )
-            //         {
-            //             random_shot = true;
-            //             return false;
-            //         }
+                        // these two cases should either mark the end of
+                    if(InRange(opposite_tile) && board_tracker[opposite_tile.first][opposite_tile.second] == HitOrMiss::HIT)
+                    {
+                            cout << "line: " << __LINE__ << endl;
 
-            //         makeHit(_other_board, t.first, t.second);
-            //     }
-            // }
+                        auto nhit = findNextHit(last_shot, opposite_tile);
+                        if(board_tracker[nhit.first][nhit.second] != HitOrMiss::MISS && makeHit(_other_board, nhit.first, nhit.second))
+                        {
+                            cout << "line: " << __LINE__ << endl;
+                            random_shot = false;
+                            return true;
+                        }
+                        else
+                        {
+                            random_shot = true;
+                        }
+                        break;
+                    }
+                    else
+                    if (InRange(opposite_tile) && board_tracker[opposite_tile.first][opposite_tile.second] == HitOrMiss::NONE)
+                    {
+                            cout << "line: " << __LINE__ << endl;
+                        if(makeHit(_other_board, opposite_tile.first, opposite_tile.second))
+                        {
+                            cout << "line: " << __LINE__ << endl;
+                            random_shot = false;
+                            return true;
+                        }
+                        break;
+                    }
+                    else
+                    // i need to manage the case for if the opposite is nothing
+                    if(InRange(opposite_tile) && board_tracker[opposite_tile.first][opposite_tile.second] == HitOrMiss::MISS)
+                        // && board_tracker[last_shot.first][last_shot.second] != HitOrMiss::MISS)
+                    { // trying t last shot might work better
+                            cout << "line: " << __LINE__ << endl;
 
+                        auto nhit = findNextHit(last_shot, opposite_tile);
+                        if(board_tracker[nhit.first][nhit.second] != HitOrMiss::MISS && makeHit(_other_board, nhit.first, nhit.second))
+                        {
+                            cout << "line: " << __LINE__ << endl;
+
+                            random_shot = false;
+                            return true;
+                        }
+                        else
+                        {
+                            random_shot = true;
+                        }
+                        break;
+                    }
+
+                }
+                else
+                {
+                   if(makeHit(_other_board, t.first, t.second))
+                   {
+                            cout << "line: " << __LINE__ << endl;
+                        last_shot = t;
+                        random_shot = false;
+                        return true;
+                   }
+                   break;
+                }
+            }
         }
-        random_shot = true;
+        random_shot = false;
     }
     return false;
+}
+
+void COMplayer::stats()
+{
+    int misses = 0, hits = 0, nothings = 0, total_tiles = board_tracker.size() * board_tracker[0].size();
+
+    for(auto t : board_tracker)
+        for (auto element: t)
+        {
+            if (element == HitOrMiss::HIT)
+            {
+                hits++;
+            }
+            else
+            if (element == HitOrMiss::MISS)
+            {
+                misses++;
+            }
+            else
+            {
+                nothings++;
+            }
+        }
+
+    cout << "\nlast shot: x: " <<last_shot.first << " y: " << last_shot.second << endl;
+    cout << "misses: " << misses <<" " << (float)misses/(float)total_tiles * 100 << "%" << endl;
+    cout << "hits: " << hits << " " << (float)hits/(float)total_tiles * 100 << "%" << endl;
+    cout << "totals: " << total_tiles  << " game left " << (1.0 - (float)nothings/(float)total_tiles)  * 100 <<"%" << endl;
+}
+
+void COMplayer::drawLastHit()
+{
+
+    Vector2 point = { static_cast<int>(last_shot.first)*10 + 5 + _board.get_x(), static_cast<int>(last_shot.second)*10 + 5 + _board.get_y()};
+
+    DrawPoly(point, 6, 4, 0, PINK);
+
 }
 

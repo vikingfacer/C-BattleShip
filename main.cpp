@@ -242,6 +242,7 @@ int main(int argc, char const *argv[])
                     {
                         // PlaySound(cannon1);
                     }
+                    p2.stats();
                 }
 
                 // get shot by opponent
@@ -305,6 +306,7 @@ int main(int argc, char const *argv[])
                     p1._board.draw();
                     playerIn.draw(&p1._board);
                     playerIn.draw(&p2._board);
+                    p2.drawLastHit();
                     ScoreBoard(health, score, stageDirections);
                 break;
             }
