@@ -227,14 +227,14 @@ int main(int argc, char const *argv[])
                                         \n move");
 
                 // shoot opponent
-                if (sp.place_ship)
+                // if (sp.place_ship)
                 {
                     // cout << "is shot  " << p1._board.get(sp.y, sp.x)->get_is_shot() << " " <<  std::flush;
                     if(!p1._board.get(sp.y, sp.x)->get_is_shot() )
                     {
                         // PlaySound(cannon1);
                     }
-                    if(p1._board.place_shot(&p2._board, sp.x, sp.y))
+                    // if(p1._board.place_shot(&p2._board, sp.x, sp.y))
                     {
                         // PlaySound(cannon1);
                     }

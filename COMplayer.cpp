@@ -106,11 +106,11 @@ bool COMplayer::fireRandShot(Board* _other_board)
     int new_x = tiles_not_shot[gen_pair].first;
     int new_y = tiles_not_shot[gen_pair].second;
 
-    if (first)
-    {
-        new_x = 5;
-        new_y = 5;
-    }
+    // if (first)
+    // {
+    //     new_x = 5;
+    //     new_y = 5;
+    // }
 
     return makeHit(_other_board, new_x,new_y);
 }
@@ -150,167 +150,167 @@ bool COMplayer::InRange(const pair<int, int>& _cpair)
     return condition1 && condition2;
 }
 
-pair<int, int> COMplayer::findNextHit(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair)
-{
-    pair<int,int> foundpair(_cpair);
+// pair<int, int> COMplayer::findNextHit(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair)
+// {
+//     pair<int,int> foundpair(_cpair);
 
-    // we only should need to search up
-    if (_cpair.first == _opp_pair.first)
-    {
-        if (_opp_pair.second - _cpair.second > 0 )
-        {
-            for(int i = _cpair.second; i > 0; i--)
-            {
-                if (board_tracker[_cpair.first][i] == NONE)
-                {
-                    foundpair.first = _cpair.first;
-                    foundpair.second= i;
-                    break;
-                }
-                else
-                if (board_tracker[_cpair.first][i] == MISS)
-                {
-                    break;
-                }
-            }
-        }
-        else
-        {
-            for(int i = _cpair.second; i < board_tracker.size(); i++)
-            {
-                if (board_tracker[_cpair.first][i] == NONE)
-                {
-                    foundpair.first = _cpair.first;
-                    foundpair.second= i;
-                    break;
-                }
-                else
-                if (board_tracker[_cpair.first][i] == MISS)
-                {
-                    break;
-                }
-            }
-        }
-    }
-    else
-    if(_cpair.second == _opp_pair.second)
-    {
-        if (_opp_pair.first - _cpair.first > 0)
-        {
-            for(int i = _cpair.first; i > 0; i--)
-            {
-                if (board_tracker[i][_cpair.second] == NONE)
-                {
-                    foundpair.first = i;
-                    foundpair.second= _cpair.second;
-                    break;
-                }
-                if (board_tracker[i][_cpair.second] == MISS)
-                {
-                    break;
-                }
-            }
-        }
-        else
-        {
-            for(int i = _opp_pair.first; i < board_tracker[0].size(); i++)
-            {
-                if (board_tracker[i][_opp_pair.second] == NONE)
-                {
-                    foundpair.first = i;
-                    foundpair.second= _opp_pair.second;
-                    break;
-                }
-                if (board_tracker[i][_cpair.second] == MISS)
-                {
-                    break;
-                }
-            }
-        }
-    }
-    return foundpair;
-}
+//     // we only should need to search up
+//     if (_cpair.first == _opp_pair.first)
+//     {
+//         if (_opp_pair.second - _cpair.second > 0 )
+//         {
+//             for(int i = _cpair.second; i > 0; i--)
+//             {
+//                 if (board_tracker[_cpair.first][i] == NONE)
+//                 {
+//                     foundpair.first = _cpair.first;
+//                     foundpair.second= i;
+//                     break;
+//                 }
+//                 else
+//                 if (board_tracker[_cpair.first][i] == MISS)
+//                 {
+//                     break;
+//                 }
+//             }
+//         }
+//         else
+//         {
+//             for(int i = _cpair.second; i < board_tracker.size(); i++)
+//             {
+//                 if (board_tracker[_cpair.first][i] == NONE)
+//                 {
+//                     foundpair.first = _cpair.first;
+//                     foundpair.second= i;
+//                     break;
+//                 }
+//                 else
+//                 if (board_tracker[_cpair.first][i] == MISS)
+//                 {
+//                     break;
+//                 }
+//             }
+//         }
+//     }
+//     else
+//     if(_cpair.second == _opp_pair.second)
+//     {
+//         if (_opp_pair.first - _cpair.first > 0)
+//         {
+//             for(int i = _cpair.first; i > 0; i--)
+//             {
+//                 if (board_tracker[i][_cpair.second] == NONE)
+//                 {
+//                     foundpair.first = i;
+//                     foundpair.second= _cpair.second;
+//                     break;
+//                 }
+//                 if (board_tracker[i][_cpair.second] == MISS)
+//                 {
+//                     break;
+//                 }
+//             }
+//         }
+//         else
+//         {
+//             for(int i = _opp_pair.first; i < board_tracker[0].size(); i++)
+//             {
+//                 if (board_tracker[i][_opp_pair.second] == NONE)
+//                 {
+//                     foundpair.first = i;
+//                     foundpair.second= _opp_pair.second;
+//                     break;
+//                 }
+//                 if (board_tracker[i][_cpair.second] == MISS)
+//                 {
+//                     break;
+//                 }
+//             }
+//         }
+//     }
+//     return foundpair;
+// }
 
-pair<int, int> COMplayer::findNextMiss(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair)
-{
-    pair<int,int> foundpair(_cpair);
+// pair<int, int> COMplayer::findNextMiss(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair)
+// {
+//     pair<int,int> foundpair(_cpair);
 
-    // we only should need to search up
-    if (_cpair.first == _opp_pair.first)
-    {
-        if (_opp_pair.second - _cpair.second > 0 )
-        {
-            for(int i = _cpair.second; i > 0; i--)
-            {
-                if (board_tracker[_cpair.first][i] == MISS)
-                {
-                    foundpair.first = _cpair.first;
-                    foundpair.second= i;
-                    break;
-                }
-                else
-                if (board_tracker[_cpair.first][i] == NONE)
-                {
-                    break;
-                }
-            }
-        }
-        else
-        {
-            for(int i = _cpair.second; i < board_tracker.size(); i++)
-            {
-                if (board_tracker[_cpair.first][i] == MISS)
-                {
-                    foundpair.first = _cpair.first;
-                    foundpair.second= i;
-                    break;
-                }
-                else
-                if (board_tracker[_cpair.first][i] == NONE)
-                {
-                    break;
-                }
-            }
-        }
-    }
-    else
-    if(_cpair.second == _opp_pair.second)
-    {
-        if (_opp_pair.first - _cpair.first > 0)
-        {
-            for(int i = _cpair.first; i > 0; i--)
-            {
-                if (board_tracker[i][_cpair.second] == MISS)
-                {
-                    foundpair.first = i;
-                    foundpair.second= _cpair.second;
-                    break;
-                }
-                if (board_tracker[i][_cpair.second] == NONE)
-                {
-                    break;
-                }
-            }
-        }
-        else
-        {
-            for(int i = _opp_pair.first; i < board_tracker[0].size(); i++)
-            {
-                if (board_tracker[i][_opp_pair.second] == MISS)
-                {
-                    foundpair.first = i;
-                    foundpair.second= _opp_pair.second;
-                    break;
-                }
-                if (board_tracker[i][_cpair.second] == NONE)
-                {
-                    break;
-                }
-            }
-        }
-    }
-    return foundpair;
-}
+//     // we only should need to search up
+//     if (_cpair.first == _opp_pair.first)
+//     {
+//         if (_opp_pair.second - _cpair.second > 0 )
+//         {
+//             for(int i = _cpair.second; i > 0; i--)
+//             {
+//                 if (board_tracker[_cpair.first][i] == MISS)
+//                 {
+//                     foundpair.first = _cpair.first;
+//                     foundpair.second= i;
+//                     break;
+//                 }
+//                 else
+//                 if (board_tracker[_cpair.first][i] == NONE)
+//                 {
+//                     break;
+//                 }
+//             }
+//         }
+//         else
+//         {
+//             for(int i = _cpair.second; i < board_tracker.size(); i++)
+//             {
+//                 if (board_tracker[_cpair.first][i] == MISS)
+//                 {
+//                     foundpair.first = _cpair.first;
+//                     foundpair.second= i;
+//                     break;
+//                 }
+//                 else
+//                 if (board_tracker[_cpair.first][i] == NONE)
+//                 {
+//                     break;
+//                 }
+//             }
+//         }
+//     }
+//     else
+//     if(_cpair.second == _opp_pair.second)
+//     {
+//         if (_opp_pair.first - _cpair.first > 0)
+//         {
+//             for(int i = _cpair.first; i > 0; i--)
+//             {
+//                 if (board_tracker[i][_cpair.second] == MISS)
+//                 {
+//                     foundpair.first = i;
+//                     foundpair.second= _cpair.second;
+//                     break;
+//                 }
+//                 if (board_tracker[i][_cpair.second] == NONE)
+//                 {
+//                     break;
+//                 }
+//             }
+//         }
+//         else
+//         {
+//             for(int i = _opp_pair.first; i < board_tracker[0].size(); i++)
+//             {
+//                 if (board_tracker[i][_opp_pair.second] == MISS)
+//                 {
+//                     foundpair.first = i;
+//                     foundpair.second= _opp_pair.second;
+//                     break;
+//                 }
+//                 if (board_tracker[i][_cpair.second] == NONE)
+//                 {
+//                     break;
+//                 }
+//             }
+//         }
+//     }
+//     return foundpair;
+// }
 
 
 // this function should return true it it hits the target
@@ -400,6 +400,45 @@ bool COMplayer::FireShot(Board* _other_board)
                 else
                 {
                     // do the same thing for the other axis
+                    auto ishot = last_shots.begin();
+                    for (outlier_min = ishot->first, outlier_max = ishot->first; ishot != last_shots.end(); ishot++)
+                    {
+                        if (ishot->first < outlier_min)
+                        {
+                            outlier_min = ishot->first;
+                        }
+                        if (ishot->first > outlier_max)
+                        {
+                            outlier_max = ishot->first;
+                        }
+                        cout << ishot->first << " , " << ishot->first << endl;
+                    }
+                    cout << "outliers : 1. " << outlier_min << " 2. " << outlier_max << endl;
+
+                    if (outlier_min - 1 >= 0 && \
+                        board_tracker[outlier_min - 1][last_shot.second] != HitOrMiss::MISS && \
+                        board_tracker[outlier_min - 1][last_shot.second] != HitOrMiss::HIT)
+                    {
+                        cout << "here" << __LINE__ << endl;
+                        makeHit(_other_board, outlier_min - 1, last_shot.second);
+                    }
+                    else
+                    if (outlier_max + 1 < board_tracker[0].size() && \
+                        board_tracker[outlier_max + 1][last_shot.second] != HitOrMiss::MISS && \
+                        board_tracker[outlier_max + 1][last_shot.second] != HitOrMiss::HIT)
+                    {
+                        cout << "here" << __LINE__ << endl;
+                        makeHit(_other_board, outlier_max + 1, last_shot.second);
+                    }
+                    else
+                    if(outlier_min - 1 >= 0 && outlier_max + 1 < board_tracker[0].size() && \
+                        board_tracker[outlier_max + 1][last_shot.second] == HitOrMiss::MISS && \
+                        board_tracker[outlier_min - 1][last_shot.second] == HitOrMiss::MISS)
+                    {
+                        last_shots.clear();
+                        random_shot = true;
+                        fireRandShot(_other_board);
+                    }
                 }
             }
             else

@@ -36,8 +36,8 @@ public:
 
 private:
 
-    pair<int, int> findNextHit(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair);
-    pair<int, int> findNextMiss(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair);
+    // pair<int, int> findNextHit(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair);
+    // pair<int, int> findNextMiss(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair);
 
     bool InRange(const pair<int, int>& _cpair);
     vector<pair<int, int>> discoverNotShot();
