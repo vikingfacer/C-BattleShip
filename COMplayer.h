@@ -18,6 +18,8 @@ enum HitOrMiss
 };
 
 
+
+
 class COMplayer : public player
 {
 
@@ -35,10 +37,14 @@ public:
 private:
 
     pair<int, int> findNextHit(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair);
+    pair<int, int> findNextMiss(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair);
+
     bool InRange(const pair<int, int>& _cpair);
     vector<pair<int, int>> discoverNotShot();
     vector<pair<int, int>> getCrossPeices(const pair<int, int>& );
     bool makeHit(Board* _other_board, const int& _x, const int& _y);
+    bool makeHit(Board* _other_board, const pair<int,int>& _pair);
+
     bool fireRandShot(Board* _other_board);
     // x and y could be difference sizes if implemented that why
     // (if someone was cruel and wanted to see the world burn)
@@ -48,7 +54,9 @@ private:
     int last_x, last_y;
     bool random_shot;
     vector<vector<HitOrMiss>> board_tracker;
+    vector<pair<int,int>> last_shots;
     pair<int,int> last_shot;
+    bool first;
 
 };
 

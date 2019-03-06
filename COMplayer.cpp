@@ -6,7 +6,9 @@ COMplayer::COMplayer() :
     gen(std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count())),
     board_tracker(vector<vector<HitOrMiss>>(_board.get_row(), vector<HitOrMiss>(_board.get_column(), HitOrMiss::NONE))),
     random_shot(true),
-    last_shot(pair<int,int>())
+    last_shots(vector<pair<int,int>>()),
+    last_shot(pair<int,int>()),
+    first(true)
 {};
 
 
@@ -14,7 +16,10 @@ COMplayer::COMplayer(int x, int y) : player( x, y),
     gen(std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count())),
     board_tracker(vector<vector<HitOrMiss>>(_board.get_row(), vector<HitOrMiss>(_board.get_column(), HitOrMiss::NONE))),
     random_shot(true),
-    last_shot(pair<int,int>())
+    last_shots(vector<pair<int,int>>()),
+    last_shot(pair<int,int>()),
+    first(true)
+
 {};
 
 
@@ -93,21 +98,21 @@ vector<pair<int, int>> COMplayer::getCrossPeices(const pair<int,int>& _last_shot
     return cross;
 }
 
-
 bool COMplayer::fireRandShot(Board* _other_board)
 {
-    bool hit = false;
     auto tiles_not_shot = discoverNotShot();
     std::uniform_int_distribution<int> pair_dist(0, tiles_not_shot.size());
     int gen_pair = pair_dist(gen);
     int new_x = tiles_not_shot[gen_pair].first;
     int new_y = tiles_not_shot[gen_pair].second;
 
+    if (first)
+    {
+        new_x = 5;
+        new_y = 5;
+    }
 
-    hit = makeHit(_other_board, new_x,new_y);
-
-    return hit;
-
+    return makeHit(_other_board, new_x,new_y);
 }
 
 // this function only returns if the hit was a hit
@@ -120,6 +125,7 @@ bool COMplayer::makeHit(Board* _other_board, const int& _x, const int& _y)
         last_shot.first = _x;
         last_shot.second= _y;
         board_tracker[_x][_y] = HitOrMiss::HIT;
+        last_shots.push_back(last_shot);
     }
     else
     {
@@ -127,6 +133,13 @@ bool COMplayer::makeHit(Board* _other_board, const int& _x, const int& _y)
     }
     return hit;
 }
+
+bool COMplayer::makeHit(Board* _other_board, const pair<int,int>& _pair)
+{
+    return makeHit(_other_board, _pair.first, _pair.second);
+}
+
+
 
 bool COMplayer::InRange(const pair<int, int>& _cpair)
 {
@@ -139,31 +152,160 @@ bool COMplayer::InRange(const pair<int, int>& _cpair)
 
 pair<int, int> COMplayer::findNextHit(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair)
 {
-    pair<int,int> foundpair(_opp_pair);
+    pair<int,int> foundpair(_cpair);
 
     // we only should need to search up
     if (_cpair.first == _opp_pair.first)
     {
-        for(int i = _opp_pair.second; i < board_tracker.size(); i++)
+        if (_opp_pair.second - _cpair.second > 0 )
         {
-            if (board_tracker[_opp_pair.first][i] == NONE)
+            for(int i = _cpair.second; i > 0; i--)
             {
-                foundpair.first = _opp_pair.first;
-                foundpair.second= i;
-                break;
+                if (board_tracker[_cpair.first][i] == NONE)
+                {
+                    foundpair.first = _cpair.first;
+                    foundpair.second= i;
+                    break;
+                }
+                else
+                if (board_tracker[_cpair.first][i] == MISS)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for(int i = _cpair.second; i < board_tracker.size(); i++)
+            {
+                if (board_tracker[_cpair.first][i] == NONE)
+                {
+                    foundpair.first = _cpair.first;
+                    foundpair.second= i;
+                    break;
+                }
+                else
+                if (board_tracker[_cpair.first][i] == MISS)
+                {
+                    break;
+                }
             }
         }
     }
     else
     if(_cpair.second == _opp_pair.second)
     {
-        for(int i = _opp_pair.first; i < board_tracker[0].size(); i++)
+        if (_opp_pair.first - _cpair.first > 0)
         {
-            if (board_tracker[i][_opp_pair.second] == NONE)
+            for(int i = _cpair.first; i > 0; i--)
             {
-                foundpair.first = i;
-                foundpair.second= _opp_pair.second;
-                break;
+                if (board_tracker[i][_cpair.second] == NONE)
+                {
+                    foundpair.first = i;
+                    foundpair.second= _cpair.second;
+                    break;
+                }
+                if (board_tracker[i][_cpair.second] == MISS)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for(int i = _opp_pair.first; i < board_tracker[0].size(); i++)
+            {
+                if (board_tracker[i][_opp_pair.second] == NONE)
+                {
+                    foundpair.first = i;
+                    foundpair.second= _opp_pair.second;
+                    break;
+                }
+                if (board_tracker[i][_cpair.second] == MISS)
+                {
+                    break;
+                }
+            }
+        }
+    }
+    return foundpair;
+}
+
+pair<int, int> COMplayer::findNextMiss(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair)
+{
+    pair<int,int> foundpair(_cpair);
+
+    // we only should need to search up
+    if (_cpair.first == _opp_pair.first)
+    {
+        if (_opp_pair.second - _cpair.second > 0 )
+        {
+            for(int i = _cpair.second; i > 0; i--)
+            {
+                if (board_tracker[_cpair.first][i] == MISS)
+                {
+                    foundpair.first = _cpair.first;
+                    foundpair.second= i;
+                    break;
+                }
+                else
+                if (board_tracker[_cpair.first][i] == NONE)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for(int i = _cpair.second; i < board_tracker.size(); i++)
+            {
+                if (board_tracker[_cpair.first][i] == MISS)
+                {
+                    foundpair.first = _cpair.first;
+                    foundpair.second= i;
+                    break;
+                }
+                else
+                if (board_tracker[_cpair.first][i] == NONE)
+                {
+                    break;
+                }
+            }
+        }
+    }
+    else
+    if(_cpair.second == _opp_pair.second)
+    {
+        if (_opp_pair.first - _cpair.first > 0)
+        {
+            for(int i = _cpair.first; i > 0; i--)
+            {
+                if (board_tracker[i][_cpair.second] == MISS)
+                {
+                    foundpair.first = i;
+                    foundpair.second= _cpair.second;
+                    break;
+                }
+                if (board_tracker[i][_cpair.second] == NONE)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for(int i = _opp_pair.first; i < board_tracker[0].size(); i++)
+            {
+                if (board_tracker[i][_opp_pair.second] == MISS)
+                {
+                    foundpair.first = i;
+                    foundpair.second= _opp_pair.second;
+                    break;
+                }
+                if (board_tracker[i][_cpair.second] == NONE)
+                {
+                    break;
+                }
             }
         }
     }
@@ -171,107 +313,104 @@ pair<int, int> COMplayer::findNextHit(const pair<int,int>& _cpair, const pair<in
 }
 
 
+// this function should return true it it hits the target
 bool COMplayer::FireShot(Board* _other_board)
 {
-    bool did_we_fire = false;
+
     if (random_shot)
     {
-        random_shot = !fireRandShot(_other_board);
-    }
-    else
-    {
-        cout << "this is not a random shot" << endl;
-
-        vector<pair<int,int>> cross_peices = getCrossPeices(last_shot);
-
-        // if there are no NONE tiles or Hit tiles to discover then do a random shot and return
-        if (cross_peices.size() == 0)
+        cout << "line: " << __LINE__ << endl;
+        if(fireRandShot(_other_board))
         {
-            random_shot = !fireRandShot(_other_board);
-            return true;
+            cout << " a random shot hit " << endl;
+            random_shot = false;
         }
         else
         {
-            for(auto t : cross_peices)
+            random_shot = true;
+        }
+        cout<< "random_shot: " << random_shot << endl;
+    }
+    else
+    {
+        cout << "line: " << __LINE__ << endl;
+
+        if (getCrossPeices(last_shot).size() > 0)
+        {
+            cout << "line: " << __LINE__ << endl;
+
+            // case shot cross
+            auto cur_cross = getCrossPeices(last_shot);
+            bool nh_exists = false; // next hit exists
+            for (auto icross: cur_cross)
             {
-                cout << "x: " << t.first << " y: " << t.second << endl;
+                if (board_tracker[icross.first][icross.second] == HitOrMiss::HIT)
+                {
+                    nh_exists = true;
+                }
             }
 
-            for(auto t : cross_peices)
+            if (nh_exists && last_shots.size() > 1)
             {
-                if (board_tracker[t.first][t.second] == HitOrMiss::HIT)
+                int outlier_min, outlier_max;
+                if (last_shot.first == last_shots[0].first)
                 {
-                    // need to find the opposite tile from the hit tile
-                    auto  opposite_tile = last_shot + (last_shot - t);
-
-                        // these two cases should either mark the end of
-                    if(InRange(opposite_tile) && board_tracker[opposite_tile.first][opposite_tile.second] == HitOrMiss::HIT)
+                    // find min
+                    // shoot that first
+                    auto ishot = last_shots.begin();
+                    for (outlier_min = ishot->second, outlier_max = ishot->second; ishot != last_shots.end(); ishot++)
                     {
-                            cout << "line: " << __LINE__ << endl;
+                        if (ishot->second < outlier_min)
+                        {
+                            outlier_min = ishot->second;
+                        }
+                        if (ishot->second > outlier_max)
+                        {
+                            outlier_max = ishot->second;
+                        }
+                        cout << ishot->first << " , " << ishot->second << endl;
+                    }
+                    cout << "outliers : 1. " << outlier_min << " 2. " << outlier_max << endl;
 
-                        auto nhit = findNextHit(last_shot, opposite_tile);
-                        if(board_tracker[nhit.first][nhit.second] != HitOrMiss::MISS && makeHit(_other_board, nhit.first, nhit.second))
-                        {
-                            cout << "line: " << __LINE__ << endl;
-                            random_shot = false;
-                            return true;
-                        }
-                        else
-                        {
-                            random_shot = true;
-                        }
-                        break;
+                    if (outlier_min - 1 >= 0 && \
+                        board_tracker[last_shot.first][outlier_min - 1] != HitOrMiss::MISS && \
+                        board_tracker[last_shot.first][outlier_min - 1] != HitOrMiss::HIT)
+                    {
+                        cout << "here" << __LINE__ << endl;
+                        makeHit(_other_board, last_shot.first, outlier_min - 1);
                     }
                     else
-                    if (InRange(opposite_tile) && board_tracker[opposite_tile.first][opposite_tile.second] == HitOrMiss::NONE)
+                    if (outlier_max + 1 < board_tracker[0].size() && \
+                        board_tracker[last_shot.first][outlier_max + 1] != HitOrMiss::MISS && \
+                        board_tracker[last_shot.first][outlier_max + 1] != HitOrMiss::HIT)
                     {
-                            cout << "line: " << __LINE__ << endl;
-                        if(makeHit(_other_board, opposite_tile.first, opposite_tile.second))
-                        {
-                            cout << "line: " << __LINE__ << endl;
-                            random_shot = false;
-                            return true;
-                        }
-                        break;
+                        cout << "here" << __LINE__ << endl;
+                        makeHit(_other_board, last_shot.first, outlier_max + 1);
                     }
                     else
-                    // i need to manage the case for if the opposite is nothing
-                    if(InRange(opposite_tile) && board_tracker[opposite_tile.first][opposite_tile.second] == HitOrMiss::MISS)
-                        // && board_tracker[last_shot.first][last_shot.second] != HitOrMiss::MISS)
-                    { // trying t last shot might work better
-                            cout << "line: " << __LINE__ << endl;
-
-                        auto nhit = findNextHit(last_shot, opposite_tile);
-                        if(board_tracker[nhit.first][nhit.second] != HitOrMiss::MISS && makeHit(_other_board, nhit.first, nhit.second))
-                        {
-                            cout << "line: " << __LINE__ << endl;
-
-                            random_shot = false;
-                            return true;
-                        }
-                        else
-                        {
-                            random_shot = true;
-                        }
-                        break;
+                    if(outlier_min - 1 >= 0 && outlier_max + 1 < board_tracker[0].size() && \
+                        board_tracker[last_shot.first][outlier_max + 1] == HitOrMiss::MISS && \
+                        board_tracker[last_shot.first][outlier_min - 1] == HitOrMiss::MISS)
+                    {
+                        last_shots.clear();
+                        random_shot = true;
+                        fireRandShot(_other_board);
                     }
-
                 }
                 else
                 {
-                   if(makeHit(_other_board, t.first, t.second))
-                   {
-                            cout << "line: " << __LINE__ << endl;
-                        last_shot = t;
-                        random_shot = false;
-                        return true;
-                   }
-                   break;
+                    // do the same thing for the other axis
                 }
             }
+            else
+            {
+                makeHit(_other_board, *cur_cross.begin());
+            }
+
         }
-        random_shot = false;
     }
+
+
     return false;
 }
 
@@ -300,15 +439,28 @@ void COMplayer::stats()
     cout << "\nlast shot: x: " <<last_shot.first << " y: " << last_shot.second << endl;
     cout << "misses: " << misses <<" " << (float)misses/(float)total_tiles * 100 << "%" << endl;
     cout << "hits: " << hits << " " << (float)hits/(float)total_tiles * 100 << "%" << endl;
-    cout << "totals: " << total_tiles  << " game left " << (1.0 - (float)nothings/(float)total_tiles)  * 100 <<"%" << endl;
+    cout << "totals: " << total_tiles  << " game left " <<  (float)nothings/(float)total_tiles  * 100 <<"%" << endl;
 }
 
 void COMplayer::drawLastHit()
 {
 
-    Vector2 point = { static_cast<int>(last_shot.first)*10 + 5 + _board.get_x(), static_cast<int>(last_shot.second)*10 + 5 + _board.get_y()};
+    Vector2 point = { static_cast<int>(last_shot.first)*10 + 5 + 550, static_cast<int>(last_shot.second)*10 + 5 + _board.get_y()};
 
-    DrawPoly(point, 6, 4, 0, PINK);
+    std::vector<Vector2> v;
+    v.push_back(point);
+
+    for(auto t : getCrossPeices(last_shot))
+    {
+        v.push_back({ static_cast<int>(t.first)*10 + 5 + 550, static_cast<int>(t.second)*10 + 5 + _board.get_y()});
+    }
+
+    auto drawthis = v.begin();
+    DrawPoly(*drawthis, 6, 4, 0, PINK);
+
+    drawthis++;
+    for(drawthis; drawthis < v.end(); drawthis++)
+        DrawPoly(*drawthis, 6, 4, 0, GREEN);
 
 }
 
