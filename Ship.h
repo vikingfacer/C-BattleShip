@@ -16,16 +16,18 @@ class Ship
 {
   public:
     Ship() = delete;
-    explicit Ship(const char &display, const int &length);
+    explicit Ship(const int &length, const bool& _show  = true);
     inline const unsigned int &get_length() { return length; };
     inline const unsigned int get_damage() { return damage; };
-    inline char get_display() { return display; };
-    inline void set_damage(const unsigned int &_damage) { damage = _damage; };
+    inline const bool is_show(){return show; };
+    inline void set_show(const bool& _show){show = _show;};
+    inline void set_damage(const unsigned int &_damage) { damage = _damage;};
     inline unsigned int get_health() { return length - damage; };
     ~Ship();
 
   private:
-    char display;
+  	bool show;
+
     unsigned int length;
     unsigned int damage;
 };

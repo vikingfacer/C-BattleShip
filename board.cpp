@@ -1,7 +1,7 @@
 #include "board.h"
 
 
-Board::Board(const float& _x, const float& _y, const int& _rows, const int& _columns, char fill) :
+Board::Board(const float& _x, const float& _y, const int& _rows, const int& _columns) :
 x(_x), y(_y), rows(_rows), columns(_columns)
 {
     plan = vector<vector<Tile*>>();
@@ -10,7 +10,7 @@ x(_x), y(_y), rows(_rows), columns(_columns)
         vector<Tile*> temp;
         for (int j = 0; j < columns; j++)
         {
-            Tile* temptile = new Tile( j + static_cast<int>(x), static_cast<int>(i), fill);
+            Tile* temptile = new Tile( j + static_cast<int>(x), static_cast<int>(i));
 
             if (temptile)
             {
@@ -32,12 +32,12 @@ Board& Board::operator=(const Board& other)
     return *this;
 }
 
-Board::Board(const Board& other_board) 
+Board::Board(const Board& other_board)
 {
     // const char wave_display = other_board.get(0,0).get_display();
     plan = other_board.plan;
-        
-} // need to fix this 
+
+} // need to fix this
 
 
 Board::~Board()
@@ -57,9 +57,9 @@ void Board::draw()
 
 bool Board::place_ship(Ship* boat, const unsigned int& _x, const unsigned int& _y, orintation orin)
 {
-    // check if the ship can be moved there 
-    // check if spaces has be defined 
-    
+    // check if the ship can be moved there
+    // check if spaces has be defined
+
     bool did_it_work = false;
     std::vector<Tile*> placement;
 
@@ -70,7 +70,7 @@ bool Board::place_ship(Ship* boat, const unsigned int& _x, const unsigned int& _
         // this finds the tile peices
         for (int i = 0; i < boat_length; i++)
         {
-            if(orin == horizontal && (_x + boat_length) <= rows)        
+            if(orin == horizontal && (_x + boat_length) <= rows)
                 placement.push_back(plan[_y][i + _x]);
             else
             if(orin == vertical && (_y + boat_length) <= columns)
@@ -96,7 +96,7 @@ bool Board::place_ship(Ship* boat, const unsigned int& _x, const unsigned int& _
         {
             for (auto it : placement)
             {
-                it->set_ship(boat);         
+                it->set_ship(boat);
             }
         }
     }
@@ -117,15 +117,15 @@ bool Board::place_shot(Board* other_board, const unsigned int& _x, const unsigne
 {
     Tile* current_tile = other_board->plan[_y][_x];
 
-    // check if a ship is there 
-    // if a ship exists there then damage the ship 
+    // check if a ship is there
+    // if a ship exists there then damage the ship
     // then show on the tile that the ship is hit
 
     if (current_tile->is_occupied() && !current_tile->get_is_shot())
     {
         current_tile->get_ship()->set_damage(current_tile->get_ship()->get_damage() + 1);
         return other_board->place_hit_marker(_x, _y);
-        
+
     }
     else
     {

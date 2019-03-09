@@ -2,24 +2,16 @@
 
 
 
-COMplayer::COMplayer() :
-    gen(std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count())),
-    board_tracker(vector<vector<HitOrMiss>>(_board.get_row(), vector<HitOrMiss>(_board.get_column(), HitOrMiss::NONE))),
-    random_shot(true),
-    last_shots(vector<pair<int,int>>()),
-    last_shot(pair<int,int>()),
-    first(true)
+COMplayer::COMplayer() : COMplayer(0,0)
 {};
 
 
-COMplayer::COMplayer(int x, int y) : player( x, y),
+COMplayer::COMplayer(int x, int y) : player( x, y, false),
     gen(std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count())),
     board_tracker(vector<vector<HitOrMiss>>(_board.get_row(), vector<HitOrMiss>(_board.get_column(), HitOrMiss::NONE))),
     random_shot(true),
     last_shots(vector<pair<int,int>>()),
-    last_shot(pair<int,int>()),
-    first(true)
-
+    last_shot(pair<int,int>())
 {};
 
 
@@ -106,12 +98,6 @@ bool COMplayer::fireRandShot(Board* _other_board)
     int new_x = tiles_not_shot[gen_pair].first;
     int new_y = tiles_not_shot[gen_pair].second;
 
-    // if (first)
-    // {
-    //     new_x = 5;
-    //     new_y = 5;
-    // }
-
     return makeHit(_other_board, new_x,new_y);
 }
 
@@ -149,168 +135,6 @@ bool COMplayer::InRange(const pair<int, int>& _cpair)
 
     return condition1 && condition2;
 }
-
-// pair<int, int> COMplayer::findNextHit(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair)
-// {
-//     pair<int,int> foundpair(_cpair);
-
-//     // we only should need to search up
-//     if (_cpair.first == _opp_pair.first)
-//     {
-//         if (_opp_pair.second - _cpair.second > 0 )
-//         {
-//             for(int i = _cpair.second; i > 0; i--)
-//             {
-//                 if (board_tracker[_cpair.first][i] == NONE)
-//                 {
-//                     foundpair.first = _cpair.first;
-//                     foundpair.second= i;
-//                     break;
-//                 }
-//                 else
-//                 if (board_tracker[_cpair.first][i] == MISS)
-//                 {
-//                     break;
-//                 }
-//             }
-//         }
-//         else
-//         {
-//             for(int i = _cpair.second; i < board_tracker.size(); i++)
-//             {
-//                 if (board_tracker[_cpair.first][i] == NONE)
-//                 {
-//                     foundpair.first = _cpair.first;
-//                     foundpair.second= i;
-//                     break;
-//                 }
-//                 else
-//                 if (board_tracker[_cpair.first][i] == MISS)
-//                 {
-//                     break;
-//                 }
-//             }
-//         }
-//     }
-//     else
-//     if(_cpair.second == _opp_pair.second)
-//     {
-//         if (_opp_pair.first - _cpair.first > 0)
-//         {
-//             for(int i = _cpair.first; i > 0; i--)
-//             {
-//                 if (board_tracker[i][_cpair.second] == NONE)
-//                 {
-//                     foundpair.first = i;
-//                     foundpair.second= _cpair.second;
-//                     break;
-//                 }
-//                 if (board_tracker[i][_cpair.second] == MISS)
-//                 {
-//                     break;
-//                 }
-//             }
-//         }
-//         else
-//         {
-//             for(int i = _opp_pair.first; i < board_tracker[0].size(); i++)
-//             {
-//                 if (board_tracker[i][_opp_pair.second] == NONE)
-//                 {
-//                     foundpair.first = i;
-//                     foundpair.second= _opp_pair.second;
-//                     break;
-//                 }
-//                 if (board_tracker[i][_cpair.second] == MISS)
-//                 {
-//                     break;
-//                 }
-//             }
-//         }
-//     }
-//     return foundpair;
-// }
-
-// pair<int, int> COMplayer::findNextMiss(const pair<int,int>& _cpair, const pair<int,int>& _opp_pair)
-// {
-//     pair<int,int> foundpair(_cpair);
-
-//     // we only should need to search up
-//     if (_cpair.first == _opp_pair.first)
-//     {
-//         if (_opp_pair.second - _cpair.second > 0 )
-//         {
-//             for(int i = _cpair.second; i > 0; i--)
-//             {
-//                 if (board_tracker[_cpair.first][i] == MISS)
-//                 {
-//                     foundpair.first = _cpair.first;
-//                     foundpair.second= i;
-//                     break;
-//                 }
-//                 else
-//                 if (board_tracker[_cpair.first][i] == NONE)
-//                 {
-//                     break;
-//                 }
-//             }
-//         }
-//         else
-//         {
-//             for(int i = _cpair.second; i < board_tracker.size(); i++)
-//             {
-//                 if (board_tracker[_cpair.first][i] == MISS)
-//                 {
-//                     foundpair.first = _cpair.first;
-//                     foundpair.second= i;
-//                     break;
-//                 }
-//                 else
-//                 if (board_tracker[_cpair.first][i] == NONE)
-//                 {
-//                     break;
-//                 }
-//             }
-//         }
-//     }
-//     else
-//     if(_cpair.second == _opp_pair.second)
-//     {
-//         if (_opp_pair.first - _cpair.first > 0)
-//         {
-//             for(int i = _cpair.first; i > 0; i--)
-//             {
-//                 if (board_tracker[i][_cpair.second] == MISS)
-//                 {
-//                     foundpair.first = i;
-//                     foundpair.second= _cpair.second;
-//                     break;
-//                 }
-//                 if (board_tracker[i][_cpair.second] == NONE)
-//                 {
-//                     break;
-//                 }
-//             }
-//         }
-//         else
-//         {
-//             for(int i = _opp_pair.first; i < board_tracker[0].size(); i++)
-//             {
-//                 if (board_tracker[i][_opp_pair.second] == MISS)
-//                 {
-//                     foundpair.first = i;
-//                     foundpair.second= _opp_pair.second;
-//                     break;
-//                 }
-//                 if (board_tracker[i][_cpair.second] == NONE)
-//                 {
-//                     break;
-//                 }
-//             }
-//         }
-//     }
-//     return foundpair;
-// }
 
 
 // this function should return true it it hits the target

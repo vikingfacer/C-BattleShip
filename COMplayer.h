@@ -31,7 +31,6 @@ public:
 	bool PlaceShip( std::vector<Ship>::iterator& _cship);
     bool FireShot(Board* _other_board);
     void stats();
-
     void drawLastHit();
 
 private:
@@ -56,7 +55,6 @@ private:
     vector<vector<HitOrMiss>> board_tracker;
     vector<pair<int,int>> last_shots;
     pair<int,int> last_shot;
-    bool first;
 
 };
 

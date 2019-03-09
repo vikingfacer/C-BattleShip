@@ -16,7 +16,7 @@ class Board
 {
 public:
 	Board() = delete;
-	explicit Board(const float& _x, const float& _y, const int& _rows, const int& _columns, char fill);
+	explicit Board(const float& _x, const float& _y, const int& _rows, const int& _columns);
 	Board& operator=(const Board& other);
 	Board(const Board& other_board);
 	void draw();

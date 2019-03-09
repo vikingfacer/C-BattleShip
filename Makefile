@@ -1,5 +1,7 @@
 COMPILER="g++"
 FLAGS="-std=c++14"
+FLAGS+="-g"
+FLAGS+="-rdynamic"
 libs="-lboost_regex"
 BIN=BATTLESHIP
 
@@ -23,7 +25,7 @@ run: $(BIN)
 	./$(BIN)
 
 $(BIN): Ship.o board.o main.o tile.o player.o drawable.o COMplayer.o
-	$(COMPILER) $(FLAGS) -g -rdynamic $^ -o $@ $(libs)
+	$(COMPILER) $(FLAGS)  $^ -o $@ $(libs)
 # -static for static
 memtest: run
 	valgrind --tool=memcheck  ./$(BIN)

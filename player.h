@@ -21,7 +21,7 @@ class player
 {
 public:
 	player();
-    player(int x, int y);
+    player(const int& _x, const int& _y, const bool& show_ships = true);
 	~player();
 	// void place_ships();
 	bool virtual PlaceShip( std::vector<Ship>::iterator& _cship, const shipcord& sp);

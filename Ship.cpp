@@ -5,8 +5,8 @@
 
 
 
-Ship::Ship( const char& _display, const int& _length) :
-  display(_display), length(_length)
+Ship::Ship(  const int& _length, const bool& _show) :
+  length(_length), show(_show)
 {
 	damage = 0;
 }

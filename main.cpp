@@ -173,7 +173,7 @@ int main(int argc, char const *argv[])
 
     bool warning, playing_music;
 
-
+    int x = 0, y = 0;
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         sp = playerIn.getInput();
@@ -234,7 +234,8 @@ int main(int argc, char const *argv[])
                     {
                         // PlaySound(cannon1);
                     }
-                    // if(p1._board.place_shot(&p2._board, sp.x, sp.y))
+
+                    if(p1._board.place_shot(&p2._board, x, y))
                     {
                         // PlaySound(cannon1);
                     }
@@ -244,10 +245,21 @@ int main(int argc, char const *argv[])
                     }
                     p2.stats();
                 }
+                x++;
+                if (x >= p1._board.get_row())
+                {
+                    y++;
+                    x = 0;
+                }
+                if (y >= p1._board.get_column())
+                {
+                    y = 0;
+                }
+
 
                 // get shot by opponent
 
-
+                score = p1.getHealth() - p2.getHealth();
 
                 health = p1.getHealth();
                 // check for win/lose
@@ -256,6 +268,10 @@ int main(int argc, char const *argv[])
                 {
                     // this game defaults to the player losing before the computer
                     cstage = STAGE5;
+                }
+                if (p2.getHealth() == 0)
+                {
+                    cstage = STAGE4;
                 }
 
             break;
@@ -299,6 +315,21 @@ int main(int argc, char const *argv[])
                     DrawText(" THE ENEMY", 0, 250, 190, BLACK);
                     DrawText("PRESS ENTER (to continue)", 500, 250, 20, BLACK);
                     DrawText("LEFT PLANNEL ENEMY SHIPYARD RIGHT PANNEL YOUR SHIPYARD", 300, 420, 20, BLACK);
+
+                break;
+
+                case STAGE4:
+                // YOU WIN
+                    ClearBackground(RED);
+                    DrawText("YOU " , 5, 0, 260, BLACK);
+                    DrawText(" WON", 0, 250, 190, BLACK);
+                break;
+
+                case STAGE5:
+                // YOU LOSE
+                    ClearBackground(RED);
+                    DrawText("YOU " , 5, 0, 260, BLACK);
+                    DrawText(" LOST", 0, 250, 190, BLACK);
 
                 break;
                 default:

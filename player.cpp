@@ -2,37 +2,21 @@
 
 
 
-player::player() : _board(Board(55, 0, 50, 50, '~'))
-{
-	ships = std::vector<Ship>();
-	ships.push_back(Ship('#', 10));
-	ships.push_back(Ship('#', 8));
-	ships.push_back(Ship('#', 8));
-	ships.push_back(Ship('#', 5));
-	ships.push_back(Ship('#', 5));
-	ships.push_back(Ship('#', 5));
-	ships.push_back(Ship('#', 2));
-	ships.push_back(Ship('#', 2));
-	ships.push_back(Ship('#', 2));
-	ships.push_back(Ship('#', 2));
-	validMove = false;
-}
+player::player() : player(55,0){}
 
 
-player::player(int x, int y) : _board(Board(x, y, 50, 50, '~'))
+player::player(const int& x, const int& y, const bool& show_ships) : _board(Board(x, y, 50, 50)), ships(std::vector<Ship>()), validMove(false)
 {
-    ships = std::vector<Ship>();
-    ships.push_back(Ship('#', 10));
-    ships.push_back(Ship('#', 8));
-    ships.push_back(Ship('#', 8));
-    ships.push_back(Ship('#', 5));
-    ships.push_back(Ship('#', 5));
-    ships.push_back(Ship('#', 5));
-    ships.push_back(Ship('#', 2));
-    ships.push_back(Ship('#', 2));
-    ships.push_back(Ship('#', 2));
-    ships.push_back(Ship('#', 2));
-    validMove = false;
+    ships.push_back(Ship( 10, show_ships));
+    ships.push_back(Ship( 8, show_ships));
+    ships.push_back(Ship( 8, show_ships));
+    ships.push_back(Ship( 5, show_ships));
+    ships.push_back(Ship( 5, show_ships));
+    ships.push_back(Ship( 5, show_ships));
+    ships.push_back(Ship( 2, show_ships));
+    ships.push_back(Ship( 2, show_ships));
+    ships.push_back(Ship( 2, show_ships));
+    ships.push_back(Ship( 2, show_ships));
 }
 
 
